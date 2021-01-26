@@ -1,0 +1,28 @@
+ID Assignment 3 Ideas
+Theme: Gamer Crazy
+1) A typing game with all the commonly used programming words (e.g syntax).
+Retionale: Train ones ability to type fast without making mistakes. The targeted users
+are especially the beginning programmers.
+Functionality: Before starting the game, choose between "All/Only for programmers"
+When the game starts, some random words will start falling from top and the user has to type them out. 
+Goal is to survive as long as possible. When the word block touches the base line, game over.
+Make a JSON files to store at least 200 programming words?
+Add-in option: Allow the user to choose which programming language. (Python, Javascript, C#, GO, C++..)
+Possible APIs in-use: 
+Dictionary API to gather English words/
+ResDB API (For storing username & score, "View Leaderboard")
+Possible: Profanity Check API
+
+Game name?
+1. SpeedFingers
+2. Godspeed Typer
+3. Words mania
+4. Progammer
+5. TypeStorm Mania ^
+6. CodeWorks 
+7. UberCoder
+8. CodeSpam
+9. Raining Words And Codes ^
+
+
+Program/code/
