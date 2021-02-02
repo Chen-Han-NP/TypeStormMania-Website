@@ -22,7 +22,11 @@ class MainMenu extends Phaser.Scene {
     
         startButton.on('pointerdown', () => { this.scene.start("TypeGame") });
 
-        this.add.dom(400,650, "button", )
+        const leaderBoardButton = this.add.text(400, 650, 'LeaderBoard', { fill: '#0f0' });
+        leaderBoardButton.setInteractive();
+    
+        leaderBoardButton.on('pointerdown', () => { this.scene.start("LeaderBoard") });   
+ 
     }
 
 
