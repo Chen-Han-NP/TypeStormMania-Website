@@ -15,6 +15,7 @@ var config = {
         }
     },
     scene: [ MainMenu, TypeGame, LeaderBoard ]
+    
 };
 
 var game = new Phaser.Game(config);
