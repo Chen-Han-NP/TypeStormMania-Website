@@ -4,7 +4,7 @@ class TypeGame extends Phaser.Scene {
     }
 
     create(){
-        const displayText = this.add.text(0,0,"Start Typing! ", {font: "50px Impact"});
+        //const displayText = this.add.text(-100,-100,"Start Typing! ", {font: "50px Impact"});
 
         this.backButton = this.add.text(600, 25, 'Go back', { fontSize: 30, fill: 'white', backgroundColor:"green" });
         this.backButton.setInteractive();
@@ -14,10 +14,10 @@ class TypeGame extends Phaser.Scene {
         this.gameOver = false;
         this.data = programmingData;
         
-        
+
 
         
-
+/*
         var tween = this.tweens.add(
             {
                 targets: displayText,
@@ -33,7 +33,7 @@ class TypeGame extends Phaser.Scene {
                     tgt[0].setColor("Red");
                 }
             }, this);
-
+*/
         //This keep tracks of which key is pressed.
         this.input.keyboard.on('keydown', function (event) { 
             console.log(event.key); //event.key -> "d" event.code -> KeyD
@@ -41,18 +41,25 @@ class TypeGame extends Phaser.Scene {
                 this.scene.start("TypeGame");
             }
         }, this);
-        
-        this.text1 = this.add.text(0, 0, '', {font: 40, fill: 'red'});
 
         
+        this.NoOfText = 1;
+        this.text1 = this.add.text(0, 0, '', {font: 40, fill: 'red'});
+
+
     }
 
     update(delta){
         var languageSelected = this.data["Python"];
-        console.log(languageSelected);
-        var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
-        console.log(randomWord)
-        this.text1.setText(randomWord);
+        for (var i = 0; i< this.NoOfText; i++){
+            var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
+            this.text1.setText(randomWord);
+            
+        }
+
+        if (this.gameOver){
+            game.destroy();
+        }
 
     }
 
