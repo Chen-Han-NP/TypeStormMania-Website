@@ -13,20 +13,9 @@ Dictionary API to gather English words/
 ResDB API (For storing username & score, "View Leaderboard")
 Possible: Profanity Check API
 
-Game name?
-1. SpeedFingers
-2. Godspeed Typer
-3. Words mania
-4. Progammer
-5. TypeStorm Mania ^
-6. CodeWorks 
-7. UberCoder
-8. CodeSpam
-9. Raining Words And Codes ^
+Game name:
+--TypeStorm Mania--
 
 
-Javascript Framework to use?
-1. Phaser
-2. p5.js 
-3. Babylon.js
-4. MelonJS
+Javascript Framework:
+Phaser.js
