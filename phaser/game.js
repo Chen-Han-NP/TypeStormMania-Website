@@ -9,15 +9,15 @@ var config = {
     },
     autoRound: false,
     physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 200 }
-        }
+        default: 'arcade'
     },
     scene: [ MainMenu, TypeGame, LeaderBoard ]
     
 };
 
 var game = new Phaser.Game(config);
-
+var gameOptions = {
+    textGravity: 100,
+    localStorageName: 'bestScore'
+}
 
