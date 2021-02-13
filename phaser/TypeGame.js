@@ -46,14 +46,28 @@ class TypeGame extends Phaser.Scene {
             }
         }, this);
 
+        this.textGroup = this.physics.add.group();
 
+        this.currentTextCount = this.textGroup;
+        console.log(this.currentTextCount);
+        this.maxTextCount = 5;
+
+
+        // this.textGroup.add(this.add.text(0, 50, "Hello world",  {font: "18px Arial Black", fill: 'white'}));
+        // this.textGroup.add(this.add.text(130, 50, "print",  {font: "18px Arial Black", fill: 'white'}));
+        // this.textGroup.add(this.add.text(200, 50, "for i in",  {font: "18px Arial Black", fill: 'white'}));
+        // this.textGroup.add(this.add.text(300, 50, "try",  {font: "18px Arial Black", fill: 'white'}));
+        // this.textGroup.add(this.add.text(400, 50, "sys.exit",  {font: "18px Arial Black", fill: 'white'}));
+
+        // this.applyVelocity(100, 200);
+        
         this.ground = this.physics.add.sprite(game.config.width/2, game.config.height - 30, 'ground');
         this.ground.setImmovable(true);
 
         
         this.NoOfText = 1;
 
-        this.generateNewText(0, 50, "hello world");
+        
 
         this.score = 0;
         //Get the top score stored in the local storage, if first time player, set it to 0 first.
@@ -73,22 +87,56 @@ class TypeGame extends Phaser.Scene {
 
     generateNewText(x, y, name){
 
-        this.newText = this.add.text(x, y, name, {font: "18px Arial Black", fill: 'white'});
-        this.physics.world.enable(this.newText);
-        this.newText.body.setVelocity(100, 200);
-        this.newText.body.setBounce(1, 1);
-        this.newText.body.setCollideWorldBounds(true);
+        let newText = this.add.text(x, y, name, {font: "18px Arial Black", fill: 'white'});
+        this.physics.world.enable(newText);
+        newText.body.setVelocity(100, 200);
+        newText.body.setBounce(1, 1);
+        newText.body.setCollideWorldBounds(true);
+        return newText;
     
     }
     
+    checkDuplicateWord(word){
+        var textGroupObjects = this.textGroup.getChildren();
+        for (var i = 0; i < textGroupObjects.length; i ++){
+            if (word == textGroupObjects[i].text){
+                return true;
+            }
+        }
+        return false;
+        
+    }
+
+    generateRandomX(){
+        return Math.floor(Math.random() * (game.config.width - 80));
+    }
+
+    applyVelocity(x, y){
+        var textGroupObjects = this.textGroup.getChildren();
+        for (var i = 0; i < textGroupObjects.length; i++){
+            this.physics.world.enable(textGroupObjects[i]);
+            textGroupObjects[i].body.setVelocity(x, y);
+            textGroupObjects[i].body.setBounce(1, 1);
+        }
+    }
 
     update(delta){
         var languageSelected = this.data["Python"];
-        for (var i = 0; i< this.NoOfText; i++){
-            var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
-            //this.text1.setText(randomWord);
+        
+        var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
+        while (this.checkDuplicateWord(randomWord)){
+            randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
+        }
+        var textGroupObjects = this.textGroup.getChildren();
+        if (textGroupObjects.length < this.maxTextCount){
+            this.textGroup.add(this.add.text(0, 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
+            this.applyVelocity(100, 200);
             
         }
+        
+
+
+
 
         if (this.gameOver){
             game.destroy();
