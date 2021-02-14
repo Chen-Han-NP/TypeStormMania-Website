@@ -42,13 +42,7 @@ class TypeGame extends Phaser.Scene {
 
 
         //This keep tracks of which key is pressed.
-        this.input.keyboard.on('keydown', function (event) { 
-            console.log(event.key); //event.key -> "d" event.code -> KeyD
-            if (event.key == "c"){
-                //this.scene.start("TypeGame");
-                console.log(this.generateRandomDelay(1000, 1500));
-            }
-        }, this);
+
 
 
 
@@ -86,15 +80,20 @@ class TypeGame extends Phaser.Scene {
                 while (this.checkDuplicateWord(randomWord)){
                     randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
                 }
+
                 var textGroupObjects = this.textGroup.getChildren();
                 if (textGroupObjects.length < this.maxTextCount){
                     this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
                     this.applyVelocity(0, 100);
                     
                 }
+
+
             },
             loop: true
         });
+
+        this.lockLetter = "";
         
     }
 
@@ -134,6 +133,7 @@ class TypeGame extends Phaser.Scene {
     }
 
 
+    //For velocity, the bigger the x value the faster the speed travelled horizontally, and same for y.
     applyVelocity(x, y){
         var textGroupObjects = this.textGroup.getChildren();
         for (var i = 0; i < textGroupObjects.length; i++){
@@ -143,6 +143,7 @@ class TypeGame extends Phaser.Scene {
         }
     }
 
+
     checkGameOver(){
         var textGroupObjects = this.textGroup.getChildren();
         for (var i = 0; i < textGroupObjects.length; i++){
@@ -151,6 +152,14 @@ class TypeGame extends Phaser.Scene {
             }
         }
         return false;
+    }
+
+    getAllFirstLetter(){
+        var textGroupObjects = this.textGroup.getChildren();
+        var letterList = [];
+        for (var i = 0; i < textGroupObjects.length; i++){
+            console.log(textGroupObjects[i].text[0]);
+        }
     }
 
     update(delta){
@@ -164,6 +173,34 @@ class TypeGame extends Phaser.Scene {
 
         else{
             this.gameOver = false;
+            this.input.keyboard.on('keydown', function (event) { 
+                this.textGroup.getChildren().forEach(function(textObject){
+                    if (textObject.text == ""){
+                        this.textGroup.remove(textObject);
+                    }
+                    if (this.lockLetter == ""){
+                        if (event.key == textObject.text[0]){
+                            var newText = textObject.text.substring(1);
+                            textObject.setText(newText);
+                            this.lockLetter == textObject.text;
+                        }
+                    }
+                    else{
+                        if (textObject.text == this.lockLetter){
+                            if (event.key == textObject.text[0]){
+                                var newText = textObject.text.substring(1);
+                                textObject.setText(newText);
+                                this.lockLetter == textObject.text;
+                            }
+                        }
+                    }
+                    
+
+
+                    
+                });
+            }, this);
+            
 
         }
 
