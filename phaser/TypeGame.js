@@ -38,28 +38,26 @@ class TypeGame extends Phaser.Scene {
                 }
             }, this);
 */
+
+
+
         //This keep tracks of which key is pressed.
         this.input.keyboard.on('keydown', function (event) { 
             console.log(event.key); //event.key -> "d" event.code -> KeyD
             if (event.key == "c"){
-                this.scene.start("TypeGame");
+                //this.scene.start("TypeGame");
+                console.log(this.generateRandomDelay(1000, 1500));
             }
         }, this);
+
+
 
         this.textGroup = this.physics.add.group();
 
         this.currentTextCount = this.textGroup;
         console.log(this.currentTextCount);
-        this.maxTextCount = 5;
+        this.maxTextCount = 12;
 
-
-        // this.textGroup.add(this.add.text(0, 50, "Hello world",  {font: "18px Arial Black", fill: 'white'}));
-        // this.textGroup.add(this.add.text(130, 50, "print",  {font: "18px Arial Black", fill: 'white'}));
-        // this.textGroup.add(this.add.text(200, 50, "for i in",  {font: "18px Arial Black", fill: 'white'}));
-        // this.textGroup.add(this.add.text(300, 50, "try",  {font: "18px Arial Black", fill: 'white'}));
-        // this.textGroup.add(this.add.text(400, 50, "sys.exit",  {font: "18px Arial Black", fill: 'white'}));
-
-        // this.applyVelocity(100, 200);
         
         this.ground = this.physics.add.sprite(game.config.width/2, game.config.height - 30, 'ground');
         this.ground.setImmovable(true);
@@ -76,7 +74,27 @@ class TypeGame extends Phaser.Scene {
         this.updateScore(this.score);
 
         
+        
+        this.time.addEvent({
+            delay: this.generateRandomDelay(500, 1200),
+            callbackScope: this,
+            callback: function() {
 
+                var languageSelected = this.data["Python"];
+        
+                var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
+                while (this.checkDuplicateWord(randomWord)){
+                    randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
+                }
+                var textGroupObjects = this.textGroup.getChildren();
+                if (textGroupObjects.length < this.maxTextCount){
+                    this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
+                    this.applyVelocity(0, 100);
+                    
+                }
+            },
+            loop: true
+        });
         
     }
 
@@ -104,12 +122,17 @@ class TypeGame extends Phaser.Scene {
             }
         }
         return false;
-        
     }
 
+
     generateRandomX(){
-        return Math.floor(Math.random() * (game.config.width - 80));
+        return Math.floor(Math.random() * (game.config.width - 100));
     }
+
+    generateRandomDelay(minValue, maxValue){
+        return Math.floor(Math.random() * (maxValue - minValue +1)) + minValue;
+    }
+
 
     applyVelocity(x, y){
         var textGroupObjects = this.textGroup.getChildren();
@@ -120,26 +143,28 @@ class TypeGame extends Phaser.Scene {
         }
     }
 
-    update(delta){
-        var languageSelected = this.data["Python"];
-        
-        var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
-        while (this.checkDuplicateWord(randomWord)){
-            randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
-        }
+    checkGameOver(){
         var textGroupObjects = this.textGroup.getChildren();
-        if (textGroupObjects.length < this.maxTextCount){
-            this.textGroup.add(this.add.text(0, 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
-            this.applyVelocity(100, 200);
-            
+        for (var i = 0; i < textGroupObjects.length; i++){
+            if (textGroupObjects[i].y >= this.ground.getBounds().top){
+                return true;
+            }
         }
-        
+        return false;
+    }
 
+    update(delta){
+        //Check if any text has collided with the ground
+        if (this.checkGameOver()){
+            this.gameOver = true;
+            console.log("Game Over!");
+            localStorage.setItem(gameOptions.localStorageName, Math.max(this.score, this.topScore));
+            this.scene.start('TypeGame');
+        }
 
+        else{
+            this.gameOver = false;
 
-
-        if (this.gameOver){
-            game.destroy();
         }
 
     }

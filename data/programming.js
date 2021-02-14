@@ -2,10 +2,19 @@ var programmingData = {
     "Python": 
      ["while",
       "print",
-      "if else",
-      "for i in range()",
-      "for x in list",
+      "if",
+      "range",
+      "for",
       "try",
-      "except"
+      "except",
+      "in",
+      "enumerate",
+      "exit",
+      "import",
+      "random",
+      "insert",
+      "replace",
+      "remove",
+      "append"
       ]
   }
