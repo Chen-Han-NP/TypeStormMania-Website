@@ -47,6 +47,7 @@ class TypeGame extends Phaser.Scene {
 
 
         this.textGroup = this.physics.add.group();
+        this.textGroupObjects = this.textGroup.getChildren();
 
         this.currentTextCount = this.textGroup;
         console.log(this.currentTextCount);
@@ -81,8 +82,7 @@ class TypeGame extends Phaser.Scene {
                     randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
                 }
 
-                var textGroupObjects = this.textGroup.getChildren();
-                if (textGroupObjects.length < this.maxTextCount){
+                if (this.textGroupObjects.length < this.maxTextCount){
                     this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
                     this.applyVelocity(0, 100);
                     
@@ -93,7 +93,8 @@ class TypeGame extends Phaser.Scene {
             loop: true
         });
 
-        this.lockLetter = "";
+        this.textPos = -1;
+
         
     }
 
@@ -114,9 +115,8 @@ class TypeGame extends Phaser.Scene {
     }
     
     checkDuplicateWord(word){
-        var textGroupObjects = this.textGroup.getChildren();
-        for (var i = 0; i < textGroupObjects.length; i ++){
-            if (word == textGroupObjects[i].text){
+        for (var i = 0; i < this.textGroupObjects.length; i ++){
+            if (word == this.textGroupObjects[i].text){
                 return true;
             }
         }
@@ -135,19 +135,17 @@ class TypeGame extends Phaser.Scene {
 
     //For velocity, the bigger the x value the faster the speed travelled horizontally, and same for y.
     applyVelocity(x, y){
-        var textGroupObjects = this.textGroup.getChildren();
-        for (var i = 0; i < textGroupObjects.length; i++){
-            this.physics.world.enable(textGroupObjects[i]);
-            textGroupObjects[i].body.setVelocity(x, y);
-            textGroupObjects[i].body.setBounce(1, 1);
+        for (var i = 0; i < this.textGroupObjects.length; i++){
+            this.physics.world.enable(this.textGroupObjects[i]);
+            this.textGroupObjects[i].body.setVelocity(x, y);
+            this.textGroupObjects[i].body.setBounce(1, 1);
         }
     }
 
 
     checkGameOver(){
-        var textGroupObjects = this.textGroup.getChildren();
-        for (var i = 0; i < textGroupObjects.length; i++){
-            if (textGroupObjects[i].y >= this.ground.getBounds().top){
+        for (var i = 0; i < this.textGroupObjects.length; i++){
+            if (this.textGroupObjects[i].y >= this.ground.getBounds().top){
                 return true;
             }
         }
@@ -155,10 +153,9 @@ class TypeGame extends Phaser.Scene {
     }
 
     getAllFirstLetter(){
-        var textGroupObjects = this.textGroup.getChildren();
         var letterList = [];
-        for (var i = 0; i < textGroupObjects.length; i++){
-            console.log(textGroupObjects[i].text[0]);
+        for (var i = 0; i < this.textGroupObjects.length; i++){
+            console.log(this.textGroupObjects[i].text[0]);
         }
     }
 
@@ -173,32 +170,41 @@ class TypeGame extends Phaser.Scene {
 
         else{
             this.gameOver = false;
+            this.textGroupObjects = this.textGroup.getChildren();
+            
+
             this.input.keyboard.on('keydown', function (event) { 
-                this.textGroup.getChildren().forEach(function(textObject){
-                    if (textObject.text == ""){
-                        this.textGroup.remove(textObject);
-                    }
-                    if (this.lockLetter == ""){
-                        if (event.key == textObject.text[0]){
-                            var newText = textObject.text.substring(1);
-                            textObject.setText(newText);
-                            this.lockLetter == textObject.text;
+                if (this.textPos == -1){
+                    console.log("stage 1!");
+                    for (var i = 0; i < this.textGroupObjects.length; i++){
+                        if (event.key == this.textGroupObjects[i].text[0]){
+                            var newText = this.textGroupObjects[i].text.substring(1);
+                            this.textGroupObjects[i].setText(newText);
+                            this.textPos = i;
                         }
+                    }
+                }
+
+                else {
+                    console.log("stage 2!")
+                    if (this.textGroupObjects[this.textPos].text == ""){
+                        this.updateScore(10);
+                        this.textGroup.remove(this.textGroupObjects[this.textPos]);
+                        console.log('remove!');
+                        this.textPos = -1;
+                    }
+                    if (event.key == this.textGroupObjects[this.textPos].text[0]){
+                        var newText = this.textGroupObjects[this.textPos].text.substring(1);
+                        this.textGroupObjects[this.textPos].setText(newText);
+                        
                     }
                     else{
-                        if (textObject.text == this.lockLetter){
-                            if (event.key == textObject.text[0]){
-                                var newText = textObject.text.substring(1);
-                                textObject.setText(newText);
-                                this.lockLetter == textObject.text;
-                            }
-                        }
+                        console.log("wrong!");
                     }
+                }
+                        
+                
                     
-
-
-                    
-                });
             }, this);
             
 
