@@ -95,6 +95,35 @@ class TypeGame extends Phaser.Scene {
 
         this.textPos = -1;
 
+        this.input.keyboard.on('keydown', function (event) { 
+            //Check if its first letter entered
+            if (this.textPos == -1){
+                for (var i = 0; i < this.textGroupObjects.length; i++){
+                    if (event.key == this.textGroupObjects[i].text[0]){
+                        var newText = this.textGroupObjects[i].text.substring(1);
+                        this.textGroupObjects[i].setText(newText);
+                        this.textPos = i;
+                        break;
+                    }
+                }
+            }
+
+            //Check if a word is locked. 
+            else {
+                if (event.key == this.textGroupObjects[this.textPos].text){
+                    this.textGroupObjects[this.textPos].setText("");
+                    this.updateScore(10);
+                    this.textGroup.remove(this.textGroupObjects[this.textPos]);
+                    this.textPos = -1;
+                }
+
+                else if (event.key == this.textGroupObjects[this.textPos].text[0]){
+                    var newText = this.textGroupObjects[this.textPos].text.substring(1);
+                    this.textGroupObjects[this.textPos].setText(newText);
+                }
+            }
+        }, this);
+
         
     }
 
@@ -159,7 +188,7 @@ class TypeGame extends Phaser.Scene {
         }
     }
 
-    update(delta){
+    update(){
         //Check if any text has collided with the ground
         if (this.checkGameOver()){
             this.gameOver = true;
@@ -171,43 +200,6 @@ class TypeGame extends Phaser.Scene {
         else{
             this.gameOver = false;
             this.textGroupObjects = this.textGroup.getChildren();
-            
-
-            this.input.keyboard.on('keydown', function (event) { 
-                //Check if its first letter entered
-                if (this.textPos == -1){
-                    for (var i = 0; i < this.textGroupObjects.length; i++){
-                        if (event.key == this.textGroupObjects[i].text[0]){
-                            var newText = this.textGroupObjects[i].text.substring(1);
-                            this.textGroupObjects[i].setText(newText);
-                            this.textPos = i;
-                            break;
-                        }
-                    }
-                }
-
-                //Check if a word is locked. 
-                else {
-                    if (this.textGroupObjects[this.textPos].text == ""){
-                        this.updateScore(10);
-                        this.textGroup.remove(this.textGroupObjects[this.textPos]);
-                        this.textPos = -1;
-                    }
-                    
-                    if (event.key == this.textGroupObjects[this.textPos].text){
-                        this.textGroupObjects[this.textPos].setText("");
-                    }
-
-                    else if (event.key == this.textGroupObjects[this.textPos].text[0]){
-                        var newText = this.textGroupObjects[this.textPos].text.substring(1);
-                        this.textGroupObjects[this.textPos].setText(newText);
-
-                    }
-                }
-                        
-                
-                    
-            }, this);
             
 
         }
