@@ -15,6 +15,24 @@ var programmingData = {
       "insert",
       "replace",
       "remove",
-      "append"
+      "append",
+      "class",
+      "def",
+      "input",
+      "len",
+      "max",
+      "min",
+      "str",
+      "int",
+      "bool",
+      "float",
+      "true",
+      "false",
+      "break",
+      "randint",
+      "return",
+      "global",
+      "and",
+      "or"
       ]
   }

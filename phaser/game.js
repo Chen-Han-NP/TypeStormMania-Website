@@ -9,7 +9,8 @@ var config = {
     },
     autoRound: false,
     physics: {
-        default: 'arcade'
+        default: 'arcade',
+        arcade: {fps: 30}
     },
     scene: [ MainMenu, TypeGame, LeaderBoard ]
     

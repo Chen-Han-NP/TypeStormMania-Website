@@ -71,7 +71,7 @@ class TypeGame extends Phaser.Scene {
         
         
         this.time.addEvent({
-            delay: this.generateRandomDelay(500, 1200),
+            delay: 500,
             callbackScope: this,
             callback: function() {
 
@@ -84,7 +84,7 @@ class TypeGame extends Phaser.Scene {
 
                 if (this.textGroupObjects.length < this.maxTextCount){
                     this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
-                    this.applyVelocity(0, 100);
+                    this.applyVelocity(0, 50);
                     
                 }
 
@@ -174,32 +174,34 @@ class TypeGame extends Phaser.Scene {
             
 
             this.input.keyboard.on('keydown', function (event) { 
+                //Check if its first letter entered
                 if (this.textPos == -1){
-                    console.log("stage 1!");
                     for (var i = 0; i < this.textGroupObjects.length; i++){
                         if (event.key == this.textGroupObjects[i].text[0]){
                             var newText = this.textGroupObjects[i].text.substring(1);
                             this.textGroupObjects[i].setText(newText);
                             this.textPos = i;
+                            break;
                         }
                     }
                 }
 
+                //Check if a word is locked. 
                 else {
-                    console.log("stage 2!")
                     if (this.textGroupObjects[this.textPos].text == ""){
                         this.updateScore(10);
                         this.textGroup.remove(this.textGroupObjects[this.textPos]);
-                        console.log('remove!');
                         this.textPos = -1;
                     }
-                    if (event.key == this.textGroupObjects[this.textPos].text[0]){
+                    
+                    if (event.key == this.textGroupObjects[this.textPos].text){
+                        this.textGroupObjects[this.textPos].setText("");
+                    }
+
+                    else if (event.key == this.textGroupObjects[this.textPos].text[0]){
                         var newText = this.textGroupObjects[this.textPos].text.substring(1);
                         this.textGroupObjects[this.textPos].setText(newText);
-                        
-                    }
-                    else{
-                        console.log("wrong!");
+
                     }
                 }
                         
