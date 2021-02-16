@@ -5,46 +5,35 @@ class TypeGame extends Phaser.Scene {
 
     preload(){
         this.load.image('ground', '/assets/ground.png');
+        this.load.image("sky1", "/assets/sky/starry sky.png");
+
     }
 
     create(){
-        //const displayText = this.add.text(-100,-100,"Start Typing! ", {font: "50px Impact"});
+        const GWIDTH = this.scale.width;
+        const GHEIGHT = this.scale.height;
+
+        this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
 
         this.backButton = this.add.text(600, 30, 'Go back', { fontSize: 30, fill: 'white', backgroundColor:"green" });
         this.backButton.setInteractive();
         this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
-        this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
+        this.backButton.on('pointerdown', () => { 
+            this.scene.start("MainMenu") 
+        });
+
+        this.isPause = false;
+        this.pauseButton = this.add.text(200, 30, "Pause",  { fontSize: 30, fill: 'white', backgroundColor:"green" });
+        this.pauseButton.setInteractive();
+        this.pauseButton.on('pointerdown', () => {
+            game.scene.pause("TypeGame");
+            game.scene.start("PauseScreen")
+            
+        });
 
         this.gameOver = false;
         this.data = programmingData;
         
-
-
-        
-/*
-        var tween = this.tweens.add(
-            {
-                targets: displayText,
-                x: game.config.width / 2 - displayText.width / 2,
-                y: game.config.height * 0.3,
-                duration: 1500,
-                ease: "Elastic",
-                easeParams: [1.5, 0.5],
-                delay: 1000,
-                onComplete: function(src, tgt){
-                    tgt[0].x = -100;
-                    tgt[0].y = -100;
-                    tgt[0].setColor("Red");
-                }
-            }, this);
-*/
-
-
-
-        //This keep tracks of which key is pressed.
-
-
-
 
         this.textGroup = this.physics.add.group();
         this.textGroupObjects = this.textGroup.getChildren();
@@ -140,9 +129,9 @@ class TypeGame extends Phaser.Scene {
         newText.body.setBounce(1, 1);
         newText.body.setCollideWorldBounds(true);
         return newText;
-    
     }
-    
+
+
     checkDuplicateWord(word){
         for (var i = 0; i < this.textGroupObjects.length; i ++){
             if (word == this.textGroupObjects[i].text){
@@ -201,10 +190,53 @@ class TypeGame extends Phaser.Scene {
             this.gameOver = false;
             this.textGroupObjects = this.textGroup.getChildren();
             
-
         }
+    }
+}
 
+class PauseScreen extends Phaser.Scene {
+    constructor() {
+        super({key:"PauseScreen"});
     }
 
+    preload(){
+        this.load.html("fontawesome", "fontawesome.html");
+    }
 
+    create(){
+        const GWIDTH = this.scale.width;
+        const GHEIGHT = this.scale.height;
+
+        //Firstly, create a transparent screen
+        this.veil = this.add.graphics({x: 0, y: 0});
+        this.veil.fillStyle('0x000000', 0.3);
+        this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
+
+
+        // a DOM elements is added pretty much like a sprite
+        let button = this.add.dom(game.config.width / 2, game.config.height / 2).createFromCache("fontawesome");
+
+        // click listener
+        button.addListener("click");
+    
+        // on click callback function
+        button.on("click", function(e) {
+            game.scene.resume("TypeGame");
+            game.scene.stop("PauseScreen")
+        })
+        
+        this.tweens.add({
+            targets: button,
+            scaleX: 0.9,
+            scaleY: 0.9,
+            ease: 'Power1',
+            duration: 1000,
+            yoyo: true,
+            repeat: -1
+        });
+    }
 }
+
+
+
+

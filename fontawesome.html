@@ -1,0 +1,39 @@
+<style type = "text/css">
+    .smallcircle svg * {
+        fill: url(#gradient1);
+    }
+    .playbutton svg * {
+        fill: url(#gradient2);
+    }
+    .fa-play g g path {
+        stroke: black;
+        stroke-width: 20;
+    }
+</style>
+
+
+
+<span class = "fa-layers fa-fw fa-10x">
+    <i class = "fas fa-circle" style = "color:black"></i>
+    <span class = "smallcircle">
+        <i class = "fas fa-circle" data-fa-transform = "shrink-3" style = "color:Tomato"></i>
+    </span>
+    <span class = "playbutton">
+        <i class = "fas fa-play" data-fa-transform = "shrink-8" style = "margin-left:35px"></i>
+    </span>
+</span>
+
+<svg width = "0" height = "0">
+    <radialGradient id = "gradient1">
+        <stop offset = "0%" style = "stop-color: rgb(252, 207, 49); stop-opacity: 1"/>
+        <stop offset = "70%" style = "stop-color: rgb(252, 207, 49); stop-opacity: 1"/>
+        <stop offset = "100%" style = "stop-color: rgb(245, 85, 85); stop-opacity: 1"/>
+    </radialGradient>
+    <linearGradient id = "gradient2">
+        <stop offset="0%" style = "stop-color: rgb(255, 0, 0); stop-opacity: 1" />
+        <stop offset="100%" style = "stop-color: rgb(255, 0, 255); stop-opacity: 1" />
+    </linearGradient>
+</svg>
+
+
+
