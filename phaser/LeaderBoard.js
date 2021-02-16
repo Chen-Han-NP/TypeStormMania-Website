@@ -4,25 +4,26 @@ class LeaderBoard extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('background', '/assets/space3.png');
+        this.load.image('background', '/assets/DarkSpace.jpg');
     }
 
     create(){
-        
-        if(leaderboardData == null){
-            this.notReady = this.add.text(120,500,"Data not loaded, please try again", { fontSize: 20, fill: 'white'})
-            this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
-
-            this.backButton = this.add.text(600, 25, '<< Go back', {font:"30px Staatliches", fontStyle:"cursive", fill: 'white', backgroundColor:"green" });
-            this.backButton.setInteractive();
-            this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
-            this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
-        }
+        var graphics;
+        let bg = this.add.image(375,540, "background"); //375, 540 is center of game
+        bg.displayWidth = game.config.width * 1;
+        bg.scaleY = bg.scaleX;
 
         if (leaderboardData != null){
             this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
 
-            this.backButton = this.add.text(600, 25, '<< Go back', {font:"30px Staatliches", fontStyle:"cursive", fill: 'white', backgroundColor:"green" });
+            graphics = this.add.graphics();
+
+            graphics.fillStyle(0x7B7B7B, 1);
+
+            //  32px radius on the corners
+            graphics.fillRoundedRect(600, 25, 130, 30, 12);
+
+            this.backButton = this.add.text(600, 25, ' << Go back ', {font:"30px Staatliches", fill: 'white'});
             this.backButton.setInteractive();
             this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
             this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
@@ -58,7 +59,10 @@ class LeaderBoard extends Phaser.Scene {
                 this.stats = this.add.text(100,240 + i * 30,`${i+1}`, {font: "26px Palatino"});
                 this.stats = this.add.text(220,240 + i * 30,`${arrangedData[i].name}`, {font: "26px Palatino"});
                 this.stats = this.add.text(430,240 + i * 30,`${arrangedData[i].score}`, {font: "26px Palatino"});
-                this.stats = this.add.text(550,240 + i * 30,`${arrangedData[i].dateOfScore.substring(0, 10)}`, {font: "18px Palatino"});
+                this.stats = this.add.text(550,240 + i * 30,`${arrangedData[i].dateOfScore.substring(0, 10)}`, {font: "26px Palatino"});
+                if (i >9){
+                    break;
+                }
             }
             
         };
@@ -68,7 +72,11 @@ class LeaderBoard extends Phaser.Scene {
     
 
     update(){
-        
+        if(leaderboardData == null){
+            this.notReady = this.add.text(80,700,"Data not loaded, please stand by", { fontSize: 30, fill: 'white'})
+            this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
+            this.scene.restart();
+        }
     }
 
     
