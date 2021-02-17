@@ -35,10 +35,10 @@ class TypeGame extends Phaser.Scene {
         pauseGraphics.fillStyle(0x7B7B7B, 1);
 
             //  12px radius on the corners
-        pauseGraphics.fillRoundedRect(192, 30, 80, 30, 12);
+        pauseGraphics.fillRoundedRect(192, 32, 80, 30, 12);
 
         this.isPause = false;
-        this.pauseButton = this.add.text(200, 30, "Pause", {font:"30px Staatliches"});
+        this.pauseButton = this.add.text(200, 32, "Pause", {font:"30px Staatliches"});
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
@@ -69,7 +69,7 @@ class TypeGame extends Phaser.Scene {
         this.score = 0;
         //Get the top score stored in the local storage, if first time player, set it to 0 first.
         this.topScore = localStorage.getItem(gameOptions.localStorageName) == null ? 0 : localStorage.getItem(gameOptions.localStorageName);
-        this.scoreText = this.add.text(game.config.width / 5 * 2, 30, '', {font: "20px Arial Black", fill: 'white'});
+        this.scoreText = this.add.text(320, 35, '', {font: "20px Arial Black", fill: 'white'});
         this.updateScore(this.score);
 
         
