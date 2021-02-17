@@ -5,7 +5,7 @@ class LeaderBoard extends Phaser.Scene {
 
     preload(){
         this.load.image('background', '/assets/DarkSpace.jpg');
-        this.load.image('reload', '/assets/reload-icon-16894.png')
+        this.load.image('reload', '/assets/reload-icon-16894.png');
         this.load.path = 'assets/loadingAnimation-png/';
         this.load.image('loading1', 'frame_00_delay-0.03s.png');
         this.load.image('loading2', 'frame_01_delay-0.03s.png');
@@ -84,7 +84,8 @@ class LeaderBoard extends Phaser.Scene {
         //     repeat: -1
         // });
         // this.add.sprite(400, 300, 'loading1').play('load');
-        
+
+
 
         if (leaderboardData != null){
             this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
@@ -96,13 +97,13 @@ class LeaderBoard extends Phaser.Scene {
             //  12px radius on the corners
             graphics.fillRoundedRect(600, 25, 130, 30, 12);
 
-            this.backButton = this.add.text(600, 25, ' << Go back ', {font:"30px Staatliches"});
+            this.backButton = this.add.text(600, 25, ' << Go back ', {font:'30px Staatliches'});
             this.backButton.setInteractive();
             this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
             this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
             
             let rdImg = this.add.image(50, 50, 'reload');
-            rdImg.scale = 0.2;
+            rdImg.scale = 0.15;
             this.reloadButton = rdImg;
             this.reloadButton.setInteractive();
             this.reloadButton.on('pointerdown', () => {
@@ -119,8 +120,8 @@ class LeaderBoard extends Phaser.Scene {
             this.statsHeader = this.add.text(550, 200,"DATE", {font: "32px Dosis"});
 
 
-
-            leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore > b.dateOfScore) ? 1 : -1) : -1 ).reverse();
+            // a.dateOfScore < b.dateOfScore checks for which date earlier
+            leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore < b.dateOfScore) ? 1 : -1) : -1 ).reverse();
 
 
             for (var i = 0; i < leaderboardData.length; i++){
@@ -139,7 +140,7 @@ class LeaderBoard extends Phaser.Scene {
 
     update(){
         if(leaderboardData == null){
-            this.notReady = this.add.text(200,700,"Data not loaded, please stand by.", {font: "30px Dosis", fill: 'white'})
+            this.notReady = this.add.text(200,300,"Data not loaded, please stand by.", {font: "30px Dosis", fill: 'white'})
             this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
     
             // this.add.sprite(400, 300, 'loading1').play('load');

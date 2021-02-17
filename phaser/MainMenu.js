@@ -6,19 +6,26 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload(){
+        this.load.image('mainMenuBg', '/assets/nightsky.jpg')
         this.load.image("bug", "/assets/bug.jpg");
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: "/phaser/rexuiplugin.min.js",
             sceneKey: 'rexUI'
         });
+        
     }
 
     create(){
+        let mainBg = this.add.image(375, 540, "mainMenuBg");
+        mainBg.scaleY = 0.57;
+        mainBg.scaleX = 0.76;
+
         this.text = this.add.text(200,200,"TypeStorm Mania ", {font: "50px Impact"});
         this.bug = this.add.image(380, 400, "bug");
-        let selectL = this.add.text(250, 600, '>>', {font:"30px Dosis", fill: 'white' });
-        let selectR = this.add.text(470, 600, '<<', {font:"30px Dosis", fill: 'white' });
+        
+        let selectL = this.add.text(250, 600, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR = this.add.text(470, 600, '<<', {font:"30px Dosis", fill: 'lightblue' });
         selectL.alpha = 0;
         selectR.alpha = 0;
 
@@ -29,7 +36,7 @@ class MainMenu extends Phaser.Scene {
         startButton.on('pointerover', () => { 
             selectL.alpha = 1;
             selectR.alpha = 1;
-            startButton.setColor('lightblue');
+            startButton.setColor('aquamarine');
         })
         startButton.on('pointerout', () => { 
             selectL.alpha = 0;
@@ -38,8 +45,8 @@ class MainMenu extends Phaser.Scene {
         })
 
 
-        let selectL2 = this.add.text(250, 700, '>>', {font:"30px Dosis", fill: 'white' });
-        let selectR2 = this.add.text(470, 700, '<<', {font:"30px Dosis", fill: 'white' });
+        let selectL2 = this.add.text(250, 700, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR2 = this.add.text(470, 700, '<<', {font:"30px Dosis", fill: 'lightblue' });
         selectL2.alpha = 0;
         selectR2.alpha = 0;
         const leaderBoardButton = this.add.text(400, 700, 'LeaderBoard', {font:"30px Dosis", fill: 'white' });
@@ -49,7 +56,7 @@ class MainMenu extends Phaser.Scene {
         leaderBoardButton.on('pointerover', () => { 
             selectL2.alpha = 1;
             selectR2.alpha = 1;
-            leaderBoardButton.setColor('lightblue');
+            leaderBoardButton.setColor('aquamarine');
         })
         leaderBoardButton.on('pointerout', () => { 
             selectL2.alpha = 0;
