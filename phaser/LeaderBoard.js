@@ -5,6 +5,7 @@ class LeaderBoard extends Phaser.Scene {
 
     preload(){
         this.load.image('background', '/assets/DarkSpace.jpg');
+        this.load.image('reload', '/assets/reload-icon-16894.png')
         this.load.path = 'assets/loadingAnimation-png/';
         this.load.image('loading1', 'frame_00_delay-0.03s.png');
         this.load.image('loading2', 'frame_01_delay-0.03s.png');
@@ -79,10 +80,11 @@ class LeaderBoard extends Phaser.Scene {
         //         { key: 'loading30' }
 
         //     ],
-        //     frameRate: 800,
+        //     frameRate: 30,
         //     repeat: -1
         // });
         // this.add.sprite(400, 300, 'loading1').play('load');
+        
 
         if (leaderboardData != null){
             this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
@@ -91,7 +93,7 @@ class LeaderBoard extends Phaser.Scene {
 
             graphics.fillStyle(0x7B7B7B, 1);
 
-            //  32px radius on the corners
+            //  12px radius on the corners
             graphics.fillRoundedRect(600, 25, 130, 30, 12);
 
             this.backButton = this.add.text(600, 25, ' << Go back ', {font:"30px Staatliches"});
@@ -99,43 +101,36 @@ class LeaderBoard extends Phaser.Scene {
             this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
             this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
             
+            let rdImg = this.add.image(50, 50, 'reload');
+            rdImg.scale = 0.2;
+            this.reloadButton = rdImg;
+            this.reloadButton.setInteractive();
+            this.reloadButton.on('pointerdown', () => {
+                getData();
+                this.scene.restart();
+                setTimeout(() => {
+                    console.log(leaderboardData);
+                }, 1000);
+            })
+
             this.statsHeader = this.add.text(100, 200,"RANK", {font: "32px Dosis"});
             this.statsHeader = this.add.text(220, 200,"NAME", {font: "32px Dosis"});
             this.statsHeader = this.add.text(430, 200,"SCORE", {font: "32px Dosis"});
             this.statsHeader = this.add.text(550, 200,"DATE", {font: "32px Dosis"});
-     
-            var scoreList = [];
+
+
+
+            leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore > b.dateOfScore) ? 1 : -1) : -1 ).reverse();
+
+
             for (var i = 0; i < leaderboardData.length; i++){
-                scoreList.push(leaderboardData[i].score);
-            }
-
-            scoreList.sort(function(a, b){return a-b}).reverse();
-            //arranged properly
-
-            var arrangedData = [];
-
-            for (var e = 0; e < scoreList.length; e++){
-                for (var f = 0; f < leaderboardData.length; f++){
-
-                    if(scoreList[e] == leaderboardData[f].score){
-                        arrangedData.push(leaderboardData[f]);
-                        break;
-                    }
+                if (i < 10){
+                    this.stats = this.add.text(100,240 + i * 30,`${i+1}`, {font: "26px Staatliches"});
+                    this.stats = this.add.text(220,240 + i * 30,`${leaderboardData[i].name}`, {font: "26px Staatliches"});
+                    this.stats = this.add.text(430,240 + i * 30,`${leaderboardData[i].score}`, {font: "26px Staatliches"});
+                    this.stats = this.add.text(550,240 + i * 30,`${leaderboardData[i].dateOfScore.substring(0, 10)}`, {font: "26px Staatliches"});
                 }
             }
-
-            //arrangedData is sorted leaderboard data dictionary
-
-            for (var i = 0; i < arrangedData.length; i++){
-                this.stats = this.add.text(100,240 + i * 30,`${i+1}`, {font: "26px Staatliches"});
-                this.stats = this.add.text(220,240 + i * 30,`${arrangedData[i].name}`, {font: "26px Staatliches"});
-                this.stats = this.add.text(430,240 + i * 30,`${arrangedData[i].score}`, {font: "26px Staatliches"});
-                this.stats = this.add.text(550,240 + i * 30,`${arrangedData[i].dateOfScore.substring(0, 10)}`, {font: "26px Staatliches"});
-                if (i >9){
-                    break;
-                }
-            }
-            
         };
     }
     

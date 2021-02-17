@@ -17,19 +17,45 @@ class MainMenu extends Phaser.Scene {
     create(){
         this.text = this.add.text(200,200,"TypeStorm Mania ", {font: "50px Impact"});
         this.bug = this.add.image(380, 400, "bug");
+        let selectL = this.add.text(250, 600, '>>', {font:"30px Dosis", fill: 'white' });
+        let selectR = this.add.text(470, 600, '<<', {font:"30px Dosis", fill: 'white' });
+        selectL.alpha = 0;
+        selectR.alpha = 0;
+
         const startButton = this.add.text(400, 600, 'Start Game', {font:"30px Dosis", fill: 'white' });
         startButton.setInteractive();
         startButton.setX(game.config.width / 2 - startButton.width / 2); //Make sure that its alw center
-
-
-        
         startButton.on('pointerdown', () => { this.scene.start("TypeGame") });
+        startButton.on('pointerover', () => { 
+            selectL.alpha = 1;
+            selectR.alpha = 1;
+            startButton.setColor('lightblue');
+        })
+        startButton.on('pointerout', () => { 
+            selectL.alpha = 0;
+            selectR.alpha = 0;
+            startButton.setColor('white');
+        })
 
+
+        let selectL2 = this.add.text(250, 700, '>>', {font:"30px Dosis", fill: 'white' });
+        let selectR2 = this.add.text(470, 700, '<<', {font:"30px Dosis", fill: 'white' });
+        selectL2.alpha = 0;
+        selectR2.alpha = 0;
         const leaderBoardButton = this.add.text(400, 700, 'LeaderBoard', {font:"30px Dosis", fill: 'white' });
         leaderBoardButton.setInteractive();
         leaderBoardButton.setX(game.config.width / 2 - leaderBoardButton.width / 2);
-
-        leaderBoardButton.on('pointerdown', () => { this.scene.start("LeaderBoard") });   
+        leaderBoardButton.on('pointerdown', () => { this.scene.start("LeaderBoard") });
+        leaderBoardButton.on('pointerover', () => { 
+            selectL2.alpha = 1;
+            selectR2.alpha = 1;
+            leaderBoardButton.setColor('lightblue');
+        })
+        leaderBoardButton.on('pointerout', () => { 
+            selectL2.alpha = 0;
+            selectR2.alpha = 0;
+            leaderBoardButton.setColor('white');
+        })
  
     }
 

@@ -12,18 +12,33 @@ class TypeGame extends Phaser.Scene {
     create(){
         const GWIDTH = this.scale.width;
         const GHEIGHT = this.scale.height;
+        var graphics;
+        var pauseGraphics;
 
         this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
+        graphics = this.add.graphics();
 
-        this.backButton = this.add.text(600, 30, 'Go back', { fontSize: 30, fill: 'white', backgroundColor:"green" });
+        graphics.fillStyle(0x7B7B7B, 1);
+
+            //  12px radius on the corners
+        graphics.fillRoundedRect(600, 30, 130, 30, 12);
+
+        this.backButton = this.add.text(600, 30, ' << Go back ', {font:"30px Staatliches"});
         this.backButton.setInteractive();
         this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
         this.backButton.on('pointerdown', () => { 
             this.scene.start("MainMenu") 
         });
 
+        pauseGraphics = this.add.graphics();
+
+        pauseGraphics.fillStyle(0x7B7B7B, 1);
+
+            //  12px radius on the corners
+        pauseGraphics.fillRoundedRect(192, 30, 80, 30, 12);
+
         this.isPause = false;
-        this.pauseButton = this.add.text(200, 30, "Pause",  { fontSize: 30, fill: 'white', backgroundColor:"green" });
+        this.pauseButton = this.add.text(200, 30, "Pause", {font:"30px Staatliches"});
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
