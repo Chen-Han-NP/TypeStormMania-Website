@@ -62,7 +62,8 @@ class TypeGame extends Phaser.Scene {
         this.ground.setImmovable(true);
 
         
-        this.NoOfText = 1;
+        this.NoOfText = 0;
+        this.isGenerateBug = false;
 
         
 
@@ -73,9 +74,9 @@ class TypeGame extends Phaser.Scene {
         this.updateScore(this.score);
 
         
-        
-        this.time.addEvent({
-            delay: 500,
+
+        this.generateText = this.time.addEvent({
+            delay: 600,
             callbackScope: this,
             callback: function() {
 
@@ -87,8 +88,32 @@ class TypeGame extends Phaser.Scene {
                 }
 
                 if (this.textGroupObjects.length < this.maxTextCount){
-                    this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "18px Arial Black", fill: 'white'}));
-                    this.applyVelocity(0, 50);
+                    this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
+                    if (this.NoOfText < 20){
+                        this.applyVelocity(0, 50);
+
+                    }
+                    else if ((this.NoOfText >= 20) && (this.NoOfText < 40)){
+                        this.applyVelocity(0, 55);
+                        this.maxTextCount += 2;
+                    }
+                    else if ((this.NoOfText >= 40) && (this.NoOfText < 60)){
+                        this.applyVelocity(0, 60);
+                    }
+                    else if ((this.NoOfText >= 60) && (this.NoOfText < 80)){
+                        this.applyVelocity(0, 65);
+                        this.maxTextCount += 2;
+                    }
+                    else if ((this.NoOfText >= 80) && (this.NoOfText < 100)){
+                        this.applyVelocity(0, 70);
+                    }
+                    else if ((this.NoOfText >= 100) && (this.NoOfText < 150)){
+                        this.applyVelocity(0, 75);
+                        this.maxTextCount += 2;
+                    }
+                    else {
+                        this.applyVelocity(0, 80);
+                    }
                     
                 }
 
@@ -96,6 +121,13 @@ class TypeGame extends Phaser.Scene {
             },
             loop: true
         });
+
+
+
+
+
+
+
 
         this.textPos = -1;
 
@@ -107,6 +139,9 @@ class TypeGame extends Phaser.Scene {
                         var newText = this.textGroupObjects[i].text.substring(1);
                         this.textGroupObjects[i].setText(newText);
                         this.textPos = i;
+                        this.textGroupObjects[i].setColor('#ebb134');
+                        this.updateScore(1);
+                        
                         break;
                     }
                 }
@@ -116,7 +151,8 @@ class TypeGame extends Phaser.Scene {
             else {
                 if (event.key == this.textGroupObjects[this.textPos].text){
                     this.textGroupObjects[this.textPos].setText("");
-                    this.updateScore(10);
+                    this.updateScore(5);
+                    this.NoOfText += 1;
                     this.textGroup.remove(this.textGroupObjects[this.textPos]);
                     this.textPos = -1;
                 }
@@ -124,8 +160,11 @@ class TypeGame extends Phaser.Scene {
                 else if (event.key == this.textGroupObjects[this.textPos].text[0]){
                     var newText = this.textGroupObjects[this.textPos].text.substring(1);
                     this.textGroupObjects[this.textPos].setText(newText);
+                    this.updateScore(1);
                 }
             }
+
+            
         }, this);
 
         
@@ -204,8 +243,16 @@ class TypeGame extends Phaser.Scene {
         else{
             this.gameOver = false;
             this.textGroupObjects = this.textGroup.getChildren();
+            if (this.NoOfText == 80){
+                this.generateText.delay = 550;
+            }
+            if (this.NoOfText == 150){
+                this.generateText.delay = 500;
+            }
             
         }
+
+
     }
 }
 
