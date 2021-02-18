@@ -90,26 +90,29 @@ class TypeGame extends Phaser.Scene {
                 if (this.textGroupObjects.length < this.maxTextCount){
                     this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
                     if (this.NoOfText < 20){
-                        this.applyVelocity(0, 50);
+                        this.applyVelocity(0, 45);
 
                     }
-                    else if ((this.NoOfText >= 20) && (this.NoOfText < 40)){
+                    else if ((this.NoOfText >= 20) && (this.NoOfText < 60)){
+                        this.applyVelocity(0, 50);
+                        this.maxTextCount = 13;
+                    }
+                    else if ((this.NoOfText >= 60) && (this.NoOfText < 100)){
                         this.applyVelocity(0, 55);
-                        this.maxTextCount += 2;
+                        this.maxTextCount = 14;
                     }
-                    else if ((this.NoOfText >= 40) && (this.NoOfText < 60)){
+                    else if ((this.NoOfText >= 100) && (this.NoOfText < 140)){
                         this.applyVelocity(0, 60);
+                        this.maxTextCount = 15;
                     }
-                    else if ((this.NoOfText >= 60) && (this.NoOfText < 80)){
+                    else if ((this.NoOfText >= 140) && (this.NoOfText < 180)){
                         this.applyVelocity(0, 65);
-                        this.maxTextCount += 2;
+                        this.maxTextCount = 16;
                     }
-                    else if ((this.NoOfText >= 80) && (this.NoOfText < 100)){
+                    else if ((this.NoOfText >= 180) && (this.NoOfText < 220)){
                         this.applyVelocity(0, 70);
-                    }
-                    else if ((this.NoOfText >= 100) && (this.NoOfText < 150)){
-                        this.applyVelocity(0, 75);
-                        this.maxTextCount += 2;
+                        this.maxTextCount = 17;
+                        
                     }
                     else {
                         this.applyVelocity(0, 80);
@@ -197,7 +200,7 @@ class TypeGame extends Phaser.Scene {
 
 
     generateRandomX(){
-        return Math.floor(Math.random() * (game.config.width - 100));
+        return Math.floor(Math.random() * (game.config.width - 130));
     }
 
     generateRandomDelay(minValue, maxValue){
@@ -243,11 +246,11 @@ class TypeGame extends Phaser.Scene {
         else{
             this.gameOver = false;
             this.textGroupObjects = this.textGroup.getChildren();
-            if (this.NoOfText == 80){
-                this.generateText.delay = 550;
+            if (this.NoOfText == 200){
+                this.generateText.delay = 580;
             }
-            if (this.NoOfText == 150){
-                this.generateText.delay = 500;
+            if (this.NoOfText == 400){
+                this.generateText.delay = 550;
             }
             
         }
