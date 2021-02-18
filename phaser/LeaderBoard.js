@@ -16,6 +16,7 @@ class LeaderBoard extends Phaser.Scene {
         bg.scaleY = bg.scaleX;
 
         if (leaderboardData != null){
+
             this.header = this.add.text(250,100,"Leaderboard ", {font: "50px Impact"});
 
             graphics = this.add.graphics();
@@ -25,11 +26,21 @@ class LeaderBoard extends Phaser.Scene {
             //  12px radius on the corners
             graphics.fillRoundedRect(600, 25, 130, 30, 12);
 
-            this.backButton = this.add.text(600, 25, ' << Go back ', {font:'30px Staatliches'});
+
+            this.backButton = this.add.text(600, 25, ' << Go back ',{font: "30px Staatliches", fill: 'white'});
             this.backButton.setInteractive();
             this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
             this.backButton.on('pointerdown', () => { this.scene.start("MainMenu") });
             
+            this.backButton.on('pointerover', () => {
+                this.backButton.setColor('#DE9C2B');
+            })
+    
+            this.backButton.on('pointerout', () => { 
+                this.backButton.setColor('white');
+            })
+
+
             let rdImg = this.add.image(50, 50, 'reload');
             rdImg.scale = 0.15;
             this.reloadButton = rdImg;

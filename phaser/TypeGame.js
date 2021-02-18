@@ -4,9 +4,9 @@ class TypeGame extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('ground', '/assets/ground.png');
-        this.load.image("sky1", "/assets/sky/starry sky.png");
-
+        this.load.image('ground', '/assets/code_ground.png');
+        this.load.image("ground_error", '/assets/code_ground.png');
+        this.load.image("sky1", "/assets/game_background_vertical.jpg");
     }
 
     create(){
@@ -15,7 +15,13 @@ class TypeGame extends Phaser.Scene {
         var graphics;
         var pauseGraphics;
 
-        this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
+        let background = this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
+        background.scale = 1.5;
+
+        this.ground = this.physics.add.sprite(game.config.width/2, game.config.height - 30, 'ground');
+        this.ground.setImmovable(true);
+        this.ground.scale = 0.93;
+
         graphics = this.add.graphics();
 
         graphics.fillStyle(0x7B7B7B, 1);
@@ -38,11 +44,11 @@ class TypeGame extends Phaser.Scene {
         pauseGraphics.fillRoundedRect(42, 32, 110, 30, 12);
 
         this.isPause = false;
-        this.pauseButton = this.add.text(50, 32, "Pause   | |", {font:"30px Staatliches"});
+        this.pauseButton = this.add.text(50, 32, "Pause  | |", {font:"30px Staatliches"});
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
-            
+            //game.scene.start("GameOverScreen")
             game.scene.start("PauseScreen")
             
         });
@@ -59,8 +65,7 @@ class TypeGame extends Phaser.Scene {
         this.maxTextCount = 12;
 
         
-        this.ground = this.physics.add.sprite(game.config.width/2, game.config.height - 30, 'ground');
-        this.ground.setImmovable(true);
+
 
         
         this.NoOfText = 0;
@@ -93,32 +98,32 @@ class TypeGame extends Phaser.Scene {
                 if (this.textGroupObjects.length < this.maxTextCount){
                     this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
                     if (this.NoOfText < 20){
-                        this.applyVelocity(0, 45);
+                        this.applyVelocity(0, 40);
 
                     }
                     else if ((this.NoOfText >= 20) && (this.NoOfText < 60)){
-                        this.applyVelocity(0, 50);
+                        this.applyVelocity(0, 45);
                         this.maxTextCount = 13;
                     }
                     else if ((this.NoOfText >= 60) && (this.NoOfText < 100)){
-                        this.applyVelocity(0, 55);
+                        this.applyVelocity(0, 50);
                         this.maxTextCount = 14;
                     }
                     else if ((this.NoOfText >= 100) && (this.NoOfText < 140)){
-                        this.applyVelocity(0, 60);
+                        this.applyVelocity(0, 55);
                         this.maxTextCount = 15;
                     }
                     else if ((this.NoOfText >= 140) && (this.NoOfText < 180)){
-                        this.applyVelocity(0, 65);
+                        this.applyVelocity(0, 60);
                         this.maxTextCount = 16;
                     }
                     else if ((this.NoOfText >= 180) && (this.NoOfText < 220)){
-                        this.applyVelocity(0, 70);
+                        this.applyVelocity(0, 65);
                         this.maxTextCount = 17;
-                        
                     }
+
                     else {
-                        this.applyVelocity(0, 80);
+                        this.applyVelocity(0, 70);
                     }
                     
                 }
@@ -210,7 +215,8 @@ class TypeGame extends Phaser.Scene {
     applyVelocity(x, y){
         for (var i = 0; i < this.textGroupObjects.length; i++){
             this.physics.world.enable(this.textGroupObjects[i]);
-            this.textGroupObjects[i].body.setVelocity(x, y);
+            var randomY = Math.floor(Math.random() * 8);
+            this.textGroupObjects[i].body.setVelocity(x, y - 4 + randomY);
             this.textGroupObjects[i].body.setBounce(1, 1);
         }
     }
@@ -218,7 +224,7 @@ class TypeGame extends Phaser.Scene {
 
     checkGameOver(){
         for (var i = 0; i < this.textGroupObjects.length; i++){
-            if (this.textGroupObjects[i].y >= this.ground.getBounds().top){
+            if (this.textGroupObjects[i].y + 20 >= this.ground.getBounds().top){
                 return true;
             }
         }
@@ -238,20 +244,23 @@ class TypeGame extends Phaser.Scene {
             this.gameOver = true;
             console.log("Game Over!");
             if (this.score > this.topScore){
+
                 localStorage.setItem(gameOptions.localStorageName, Math.max(this.score, this.topScore));
                 leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore < b.dateOfScore) ? 1 : -1) : -1 ).reverse();
+                //this.gameOver = false;
+
                 if (this.score > leaderboardData[9].score){
                     game.scene.pause("TypeGame");
                     game.scene.start("UploadScoreScreen");
                 }
                 else{
-                    game.scene.stop("TypeGame");
+                    game.scene.pause("TypeGame");
                     game.scene.start("GameOverScreen");
                 }
             }
 
             else{
-                game.scene.stop("TypeGame");
+                game.scene.pause("TypeGame");
                 game.scene.start("GameOverScreen");  
             }
              
@@ -294,11 +303,31 @@ class PauseScreen extends Phaser.Scene {
 
         this.restartButton = this.add.text(GWIDTH / 2 - 60, GHEIGHT / 2 + 200, "Restart", {font: "40px Dosis", fill: 'white'});
         
+        //Set interative for Restart Button
+        let selectL = this.add.text(250, GHEIGHT / 2 + 206, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR = this.add.text(470, GHEIGHT / 2 + 206, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        selectL.alpha = 0;
+        selectR.alpha = 0;
+
         this.restartButton.setInteractive();
         this.restartButton.on('pointerdown', () => { 
             game.scene.stop("PauseScreen");
             game.scene.start("TypeGame");
         });
+
+        this.restartButton.on('pointerover', () => { 
+            selectL.alpha = 1;
+            selectR.alpha = 1;
+            selectL.setColor('orangered');
+            selectR.setColor('orangered');
+            this.restartButton.setColor('#FEC619');
+        })
+
+        this.restartButton.on('pointerout', () => { 
+            selectL.alpha = 0;
+            selectR.alpha = 0;
+            this.restartButton.setColor('white');
+        })
 
         // a DOM elements is added pretty much like a sprite
         let button = this.add.dom(game.config.width / 2, game.config.height / 2).createFromCache("fontawesome");
@@ -492,8 +521,8 @@ class GameOverScreen extends Phaser.Scene {
         this.leaderboardButton = this.add.text(GWIDTH / 2 - 100, GHEIGHT / 2 + 90, "LeaderBoard", {font: "40px Dosis", fill: 'white'});
         
         //Set interative for Restart Button
-        let selectL = this.add.text(220, GHEIGHT / 2 - 50, '>>', {font:"30px Dosis", fill: 'lightblue' });
-        let selectR = this.add.text(500, GHEIGHT / 2 - 50, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        let selectL = this.add.text(220, GHEIGHT / 2 - 44, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR = this.add.text(500, GHEIGHT / 2 - 44, '<<', {font:"30px Dosis", fill: 'lightblue' });
         selectL.alpha = 0;
         selectR.alpha = 0;
 
@@ -506,7 +535,9 @@ class GameOverScreen extends Phaser.Scene {
         this.restartButton.on('pointerover', () => { 
             selectL.alpha = 1;
             selectR.alpha = 1;
-            this.restartButton.setColor('#DE9C2B');
+            selectL.setColor('orangered');
+            selectR.setColor('orangered');
+            this.restartButton.setColor('#FEC619');
         })
 
         this.restartButton.on('pointerout', () => { 
@@ -532,7 +563,9 @@ class GameOverScreen extends Phaser.Scene {
         this.mainMenuButton.on('pointerover', () => { 
             selectL2.alpha = 1;
             selectR2.alpha = 1;
-            this.mainMenuButton.setColor('#2ACAEA');
+            selectL2.setColor('orangered');
+            selectR2.setColor('orangered');
+            this.mainMenuButton.setColor('#FEC619');
         })
 
         this.mainMenuButton.on('pointerout', () => { 
@@ -542,8 +575,8 @@ class GameOverScreen extends Phaser.Scene {
         })
 
         //Set interactive for LeaderBoard button
-        let selectL3 = this.add.text(220, GHEIGHT / 2 + 90, '>>', {font:"30px Dosis", fill: 'lightblue' });
-        let selectR3 = this.add.text(500, GHEIGHT / 2 + 90, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        let selectL3 = this.add.text(220, GHEIGHT / 2 + 96, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR3 = this.add.text(500, GHEIGHT / 2 + 96, '<<', {font:"30px Dosis", fill: 'lightblue' });
         selectL3.alpha = 0;
         selectR3.alpha = 0;
 
@@ -557,6 +590,8 @@ class GameOverScreen extends Phaser.Scene {
         this.leaderboardButton.on('pointerover', () => { 
             selectL3.alpha = 1;
             selectR3.alpha = 1;
+            selectL3.setColor('orangered');
+            selectR3.setColor('orangered');
             this.leaderboardButton.setColor('#FEC619');
         })
 
