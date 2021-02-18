@@ -42,7 +42,7 @@ class TypeGame extends Phaser.Scene {
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
-           
+            
             game.scene.start("PauseScreen")
             
         });
@@ -245,12 +245,14 @@ class TypeGame extends Phaser.Scene {
                     game.scene.start("UploadScoreScreen");
                 }
                 else{
-                    this.scene.start("TypeGame");
+                    game.scene.stop("TypeGame");
+                    game.scene.start("GameOverScreen");
                 }
             }
 
             else{
-                this.scene.start('TypeGame');  
+                game.scene.stop("TypeGame");
+                game.scene.start("GameOverScreen");  
             }
              
         }
@@ -289,6 +291,14 @@ class PauseScreen extends Phaser.Scene {
         this.veil.fillStyle('0x000000', 0.3);
         this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
 
+
+        this.restartButton = this.add.text(GWIDTH / 2 - 60, GHEIGHT / 2 + 200, "Restart", {font: "40px Dosis", fill: 'white'});
+        
+        this.restartButton.setInteractive();
+        this.restartButton.on('pointerdown', () => { 
+            game.scene.stop("PauseScreen");
+            game.scene.start("TypeGame");
+        });
 
         // a DOM elements is added pretty much like a sprite
         let button = this.add.dom(game.config.width / 2, game.config.height / 2).createFromCache("fontawesome");
@@ -331,18 +341,29 @@ class UploadScoreScreen extends Phaser.Scene {
     create(){
         const GWIDTH = this.scale.width;
         const GHEIGHT = this.scale.height;
+        
+
+        
 
         //Firstly, create a transparent screen
         this.veil = this.add.graphics({x: 0, y: 0});
-        this.veil.fillStyle('0x000000', 0.3);
+        this.veil.fillStyle('0x000000', 0.5);
         this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
 
         var uploadingScore = localStorage.getItem(gameOptions.localStorageName);
         console.log(uploadingScore);
-        this.congrat_text = this.add.text(250, 300, "NEW HIGH SCORE!!", {font: "40px Dosis", fill: 'white'} );
-        this.score = this.add.text(GWIDTH / 2 - 20, 350, uploadingScore, {font: "60px Dosis", fill: "red", fontWeight: "bold"});
-        
-        
+        this.congrat_text = this.add.text(220, 300, "NEW HIGH SCORE!!", {font: "40px Dosis", fill: 'white'} );
+        this.score = this.add.text(GWIDTH / 2 - 50, 350, uploadingScore, {font: "60px Dosis", fill: "red", fontWeight: "bold"});
+
+
+        this.backButton = this.add.text(500, 150, 'Go back', {font:"40px Dosis", fill: "black", backgroundColor: "white"});
+        this.backButton.setInteractive();
+        this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
+        this.backButton.on('pointerdown', () => { 
+            game.scene.stop("UploadScoreScreen");
+            game.scene.stop("TypeGame")
+            game.scene.start("MainMenu");
+        });
 
         var element = this.add.dom(GWIDTH / 2, GHEIGHT + 100).createFromCache('nameform');
 
@@ -376,7 +397,7 @@ class UploadScoreScreen extends Phaser.Scene {
                             var id;
                             var isThereName = false;
                             for (var i = 0; i < leaderboardData.length; i++){
-                                if ((inputUsername.value == leaderboardData[i].name) && (uploadingScore > leaderboardData[i].score)){
+                                if ((inputUsername.value == leaderboardData[i].name) && (uploadingScore >= leaderboardData[i].score)){
                                     id = leaderboardData[i]["_id"];
                                     isThereName = true;
                                 }
@@ -415,16 +436,19 @@ class UploadScoreScreen extends Phaser.Scene {
         
                             }
                             
+                            
                             $.ajax(settings).done(function (response) {
                                 console.log(response);
                                 console.log("success!");
+                                alert("Post successfully!");
+                                game.scene.stop("UploadScoreScreen");
+                                game.scene.start("GameOverScreen");
 
                             });
-
-                            // game.scene.stop("UploadScoreScreen")
-                            // game.scene.start("TypeGame");
+                        
                         }
                     });
+
     
                 }
 
@@ -441,10 +465,111 @@ class UploadScoreScreen extends Phaser.Scene {
 
     }
 
+}
 
 
+class GameOverScreen extends Phaser.Scene {
+    constructor() {
+        super({key:"GameOverScreen"});
+    }
+
+    preload(){
+
+    }
+
+    create(){
+        const GWIDTH = this.scale.width;
+        const GHEIGHT = this.scale.height;
+
+        this.veil = this.add.graphics({x: 0, y: 0});
+        this.veil.fillStyle('0x000000', 0.5);
+        this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
+
+        this.gameOver = this.add.text(200, 300, "GAME OVER", {font: "70px Dosis", fill: 'red', stroke: "white", strokeThickness: 1} );
+
+        this.restartButton = this.add.text(GWIDTH / 2 - 60, GHEIGHT / 2 - 50, "Restart", {font: "40px Dosis", fill: 'white'});
+        this.mainMenuButton = this.add.text(GWIDTH / 2 - 85, GHEIGHT / 2 + 17, "Main Menu", {font: "40px Dosis", fill: 'white'});
+        this.leaderboardButton = this.add.text(GWIDTH / 2 - 100, GHEIGHT / 2 + 90, "LeaderBoard", {font: "40px Dosis", fill: 'white'});
+        
+        //Set interative for Restart Button
+        let selectL = this.add.text(220, GHEIGHT / 2 - 50, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR = this.add.text(500, GHEIGHT / 2 - 50, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        selectL.alpha = 0;
+        selectR.alpha = 0;
+
+        this.restartButton.setInteractive();
+        this.restartButton.on('pointerdown', () => { 
+            game.scene.stop("GameOverScreen");
+            game.scene.start("TypeGame");
+        });
+
+        this.restartButton.on('pointerover', () => { 
+            selectL.alpha = 1;
+            selectR.alpha = 1;
+            this.restartButton.setColor('#DE9C2B');
+        })
+
+        this.restartButton.on('pointerout', () => { 
+            selectL.alpha = 0;
+            selectR.alpha = 0;
+            this.restartButton.setColor('white');
+        })
+
+
+        //Set Interactive for MainMenu Button
+        let selectL2 = this.add.text(220, GHEIGHT / 2 + 20, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR2 = this.add.text(500, GHEIGHT / 2 + 20, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        selectL2.alpha = 0;
+        selectR2.alpha = 0;
+
+        this.mainMenuButton.setInteractive();
+        this.mainMenuButton.on('pointerdown', () => { 
+            game.scene.stop("TypeGame");
+            game.scene.stop("GameOverScreen");
+            game.scene.start("MainMenu");
+        });
+
+        this.mainMenuButton.on('pointerover', () => { 
+            selectL2.alpha = 1;
+            selectR2.alpha = 1;
+            this.mainMenuButton.setColor('#2ACAEA');
+        })
+
+        this.mainMenuButton.on('pointerout', () => { 
+            selectL2.alpha = 0;
+            selectR2.alpha = 0;
+            this.mainMenuButton.setColor('white');
+        })
+
+        //Set interactive for LeaderBoard button
+        let selectL3 = this.add.text(220, GHEIGHT / 2 + 90, '>>', {font:"30px Dosis", fill: 'lightblue' });
+        let selectR3 = this.add.text(500, GHEIGHT / 2 + 90, '<<', {font:"30px Dosis", fill: 'lightblue' });
+        selectL3.alpha = 0;
+        selectR3.alpha = 0;
+
+        this.leaderboardButton.setInteractive();
+        this.leaderboardButton.on('pointerdown', () => { 
+            game.scene.stop("TypeGame");
+            game.scene.stop("GameOverScreen");
+            game.scene.start("LeaderBoard");
+        });
+
+        this.leaderboardButton.on('pointerover', () => { 
+            selectL3.alpha = 1;
+            selectR3.alpha = 1;
+            this.leaderboardButton.setColor('#FEC619');
+        })
+
+        this.leaderboardButton.on('pointerout', () => { 
+            selectL3.alpha = 0;
+            selectR3.alpha = 0;
+            this.leaderboardButton.setColor('white');
+        })
+
+    }
 
 }
+
 
 
 
