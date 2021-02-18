@@ -35,10 +35,10 @@ class TypeGame extends Phaser.Scene {
         pauseGraphics.fillStyle(0x7B7B7B, 1);
 
             //  12px radius on the corners
-        pauseGraphics.fillRoundedRect(192, 32, 80, 30, 12);
+        pauseGraphics.fillRoundedRect(42, 32, 110, 30, 12);
 
         this.isPause = false;
-        this.pauseButton = this.add.text(200, 32, "Pause", {font:"30px Staatliches"});
+        this.pauseButton = this.add.text(50, 32, "Pause   | |", {font:"30px Staatliches"});
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
@@ -71,7 +71,9 @@ class TypeGame extends Phaser.Scene {
         this.score = 0;
         //Get the top score stored in the local storage, if first time player, set it to 0 first.
         this.topScore = localStorage.getItem(gameOptions.localStorageName) == null ? 0 : localStorage.getItem(gameOptions.localStorageName);
-        this.scoreText = this.add.text(320, 35, '', {font: "20px Arial Black", fill: 'white'});
+        this.scoreText = this.add.text(GWIDTH / 2 - 130,    35, '', {font: "20px Arial Black", fill: 'white'});
+        this.topScoreText = this.add.text(GWIDTH / 2 + 60, 35, "Best: " + this.topScore, {font: "20px Arial Black", fill: 'white'});
+
         this.updateScore(this.score);
 
         
@@ -171,7 +173,7 @@ class TypeGame extends Phaser.Scene {
 
     updateScore(inc){
         this.score += inc;
-        this.scoreText.text = "Score: " + this.score + "      Best: " + this.topScore;
+        this.scoreText.text = "Score: " + this.score;
     }
 
     generateNewText(x, y, name){
@@ -336,6 +338,7 @@ class UploadScoreScreen extends Phaser.Scene {
         this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
 
         var uploadingScore = localStorage.getItem(gameOptions.localStorageName);
+        console.log(uploadingScore);
         this.congrat_text = this.add.text(250, 300, "NEW HIGH SCORE!!", {font: "40px Dosis", fill: 'white'} );
         this.score = this.add.text(GWIDTH / 2 - 20, 350, uploadingScore, {font: "60px Dosis", fill: "red", fontWeight: "bold"});
         
@@ -369,24 +372,52 @@ class UploadScoreScreen extends Phaser.Scene {
                             element.setVisible(false);
                             const APIKEY = "602135463f9eb665a16892a6";
                             var jsondata = {"name": inputUsername.value, "score": uploadingScore, "dateOfScore": new Date()};
-                            var settings = {
-                            "async": true,
-                            "crossDomain": true,
-                            "url": "https://typestormmania-c0cf.restdb.io/rest/leaderboard",
-                            "method": "POST",
-                            "headers": {
-                                "content-type": "application/json",
-                                "x-apikey": APIKEY,
-                                "cache-control": "no-cache"
-                            },
-                            "processData": false,
-                            "data": JSON.stringify(jsondata)
-                            }
 
+                            var id;
+                            var isThereName = false;
+                            for (var i = 0; i < leaderboardData.length; i++){
+                                if ((inputUsername.value == leaderboardData[i].name) && (uploadingScore > leaderboardData[i].score)){
+                                    id = leaderboardData[i]["_id"];
+                                    isThereName = true;
+                                }
+                            }
+                            
+                            if (isThereName){
+                                var settings = {
+                                    "async": true,
+                                    "crossDomain": true,
+                                    "url": "https://typestormmania-c0cf.restdb.io/rest/leaderboard/" + id,
+                                    "method": "PUT",
+                                    "headers": {
+                                        "content-type": "application/json",
+                                        "x-apikey": APIKEY,
+                                        "cache-control": "no-cache"
+                                    },
+                                    "processData": false,
+                                    "data": JSON.stringify(jsondata)
+                                    }
+        
+                            }
+                            else{
+                                var settings = {
+                                    "async": true,
+                                    "crossDomain": true,
+                                    "url": "https://typestormmania-c0cf.restdb.io/rest/leaderboard",
+                                    "method": "POST",
+                                    "headers": {
+                                        "content-type": "application/json",
+                                        "x-apikey": APIKEY,
+                                        "cache-control": "no-cache"
+                                    },
+                                    "processData": false,
+                                    "data": JSON.stringify(jsondata)
+                                    }
+        
+                            }
+                            
                             $.ajax(settings).done(function (response) {
                                 console.log(response);
-                                console.log("success!") 
-                                this.congrat_text.setText("Uploaded Successfully!");
+                                console.log("success!");
 
                             });
 
@@ -409,6 +440,10 @@ class UploadScoreScreen extends Phaser.Scene {
         });
 
     }
+
+
+
+
 }
 
 

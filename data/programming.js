@@ -5,6 +5,7 @@ var programmingData = {
       "if",
       "range",
       "for",
+      "elif",
       "try",
       "except",
       "in",
