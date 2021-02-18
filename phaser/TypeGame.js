@@ -42,6 +42,7 @@ class TypeGame extends Phaser.Scene {
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
+           
             game.scene.start("PauseScreen")
             
         });
@@ -124,11 +125,6 @@ class TypeGame extends Phaser.Scene {
             },
             loop: true
         });
-
-
-
-
-
 
 
 
@@ -239,8 +235,22 @@ class TypeGame extends Phaser.Scene {
         if (this.checkGameOver()){
             this.gameOver = true;
             console.log("Game Over!");
-            localStorage.setItem(gameOptions.localStorageName, Math.max(this.score, this.topScore));
-            this.scene.start('TypeGame');
+            if (this.score > this.topScore){
+                localStorage.setItem(gameOptions.localStorageName, Math.max(this.score, this.topScore));
+                leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore < b.dateOfScore) ? 1 : -1) : -1 ).reverse();
+                if (this.score > leaderboardData[9].score){
+                    game.scene.pause("TypeGame");
+                    game.scene.start("UploadScoreScreen");
+                }
+                else{
+                    this.scene.start("TypeGame");
+                }
+            }
+
+            else{
+                this.scene.start('TypeGame');  
+            }
+             
         }
 
         else{
@@ -301,6 +311,107 @@ class PauseScreen extends Phaser.Scene {
         });
     }
 }
+
+class UploadScoreScreen extends Phaser.Scene {
+    constructor() {
+        super({key:"UploadScoreScreen"});
+    }
+
+    preload(){
+        this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: "/phaser/rexuiplugin.min.js",
+            sceneKey: 'rexUI'
+        });
+        this.load.html('nameform', 'uploadscoreform.html');
+    }
+
+    create(){
+        const GWIDTH = this.scale.width;
+        const GHEIGHT = this.scale.height;
+
+        //Firstly, create a transparent screen
+        this.veil = this.add.graphics({x: 0, y: 0});
+        this.veil.fillStyle('0x000000', 0.3);
+        this.veil.fillRect(0, 0, GWIDTH, GHEIGHT);
+
+        var uploadingScore = localStorage.getItem(gameOptions.localStorageName);
+        this.congrat_text = this.add.text(250, 300, "NEW HIGH SCORE!!", {font: "40px Dosis", fill: 'white'} );
+        this.score = this.add.text(GWIDTH / 2 - 20, 350, uploadingScore, {font: "60px Dosis", fill: "red", fontWeight: "bold"});
+        
+        
+
+        var element = this.add.dom(GWIDTH / 2, GHEIGHT + 100).createFromCache('nameform');
+
+        element.setPerspective(800);
+    
+        element.addListener('click');
+    
+        element.on('click', function (event) {
+    
+            if (event.target.name === 'submitButton')
+            {
+                var inputUsername = this.getChildByName('username');
+    
+                //  Have they entered anything?
+                if (inputUsername.value !== '')
+                {
+                    //  Turn off the click events
+                    this.removeListener('click');
+                    
+                    //  Tween the login form out
+                    this.scene.tweens.add({ targets: element.rotate3d, x: 1, w: 90, duration: 3000, ease: 'Power3' });
+    
+                    this.scene.tweens.add({ targets: element, scaleX: 2, scaleY: 2, y: 700, duration: 3000, ease: 'Power3',
+
+                        onComplete: function ()
+                        {
+                            element.setVisible(false);
+                            const APIKEY = "602135463f9eb665a16892a6";
+                            var jsondata = {"name": inputUsername.value, "score": uploadingScore, "dateOfScore": new Date()};
+                            var settings = {
+                            "async": true,
+                            "crossDomain": true,
+                            "url": "https://typestormmania-c0cf.restdb.io/rest/leaderboard",
+                            "method": "POST",
+                            "headers": {
+                                "content-type": "application/json",
+                                "x-apikey": APIKEY,
+                                "cache-control": "no-cache"
+                            },
+                            "processData": false,
+                            "data": JSON.stringify(jsondata)
+                            }
+
+                            $.ajax(settings).done(function (response) {
+                                console.log(response);
+                                console.log("success!") 
+                                this.congrat_text.setText("Uploaded Successfully!");
+
+                            });
+
+                            // game.scene.stop("UploadScoreScreen")
+                            // game.scene.start("TypeGame");
+                        }
+                    });
+    
+                }
+
+            }
+    
+        });
+
+        this.tweens.add({
+            targets: element,
+            y: 600,
+            duration: 1000,
+            ease: 'Power3'
+        });
+
+    }
+}
+
+
 
 
 

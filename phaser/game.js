@@ -16,7 +16,7 @@ var config = {
     dom: {
         createContainer: true
     },
-    scene: [MainMenu, TypeGame, PauseScreen, LeaderBoard]
+    scene: [MainMenu, TypeGame, PauseScreen, UploadScoreScreen, LeaderBoard]
     
 };
 

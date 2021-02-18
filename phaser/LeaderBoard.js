@@ -122,7 +122,7 @@ class LeaderBoard extends Phaser.Scene {
 
             // a.dateOfScore < b.dateOfScore checks for which date earlier
             leaderboardData.sort((a, b) => (a.score > b.score) ? 1 : (a.score == b.score) ? ((a.dateOfScore < b.dateOfScore) ? 1 : -1) : -1 ).reverse();
-
+            
 
             for (var i = 0; i < leaderboardData.length; i++){
                 if (i < 10){
