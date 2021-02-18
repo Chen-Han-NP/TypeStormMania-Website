@@ -5,7 +5,7 @@ class TypeGame extends Phaser.Scene {
 
     preload(){
         this.load.image('ground', '/assets/code_ground.png');
-        this.load.image("ground_error", '/assets/bug_ground.png');
+        this.load.image("ground_error", '/assets/bug_ground_2.png');
         this.load.image("sky1", "/assets/game_background_vertical.jpg");
     }
 
@@ -226,7 +226,7 @@ class TypeGame extends Phaser.Scene {
         for (var i = 0; i < this.textGroupObjects.length; i++){
             if (this.textGroupObjects[i].y + 20 >= this.ground.getBounds().top){
                 this.ground_error = this.add.image(game.config.width/2, game.config.height - 30, 'ground_error');
-                this.ground_error.scale = 0.85;
+                this.ground_error.scale = 0.95;
                 return true;
             }
         }
