@@ -63,8 +63,8 @@ class TypeGame extends Phaser.Scene {
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
-            game.scene.start("UploadScoreScreen");
-            //game.scene.start("PauseScreen")
+            //game.scene.start("UploadScoreScreen");
+            game.scene.start("PauseScreen")
             
         });
 
