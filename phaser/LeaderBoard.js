@@ -4,8 +4,8 @@ class LeaderBoard extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('background', '/assets/leaderboardBG.jpg');
-        this.load.image('reload', '/assets/reload-icon-16894.png');
+        this.load.image('background', './assets/leaderboardBG.jpg');
+        this.load.image('reload', './assets/reload-icon-16894.png');
 
     }
 

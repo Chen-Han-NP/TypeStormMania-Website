@@ -4,10 +4,10 @@ class TypeGame extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('ground', '/assets/code_ground.png');
-        this.load.image("ground_error", '/assets/bug_ground_2.png');
-        this.load.image("sky1", "/assets/game_background_vertical.jpg");
-        this.load.image("bug", "/assets/coding_bug_outline.png");
+        this.load.image('ground', './assets/code_ground.png');
+        this.load.image("ground_error", './assets/bug_ground_2.png');
+        this.load.image("sky1", "./assets/game_background_vertical.jpg");
+        this.load.image("bug", "./assets/coding_bug_outline.png");
     }
 
     create(){
@@ -488,10 +488,10 @@ class UploadScoreScreen extends Phaser.Scene {
     preload(){
         this.load.scenePlugin({
             key: 'rexuiplugin',
-            url: "/phaser/rexuiplugin.min.js",
+            url: "./phaser/rexuiplugin.min.js",
             sceneKey: 'rexUI'
         });
-        this.load.html('nameform', 'uploadscoreform.html');
+        this.load.html('nameform', './uploadscoreform.html');
     }
 
     create(){
