@@ -33,13 +33,15 @@ This website uses mostly cool colours. On every page in the game, it uses a cool
 
 # Credits
 ## Website articles
-- Explosion codes - https://phaser.io/examples/v3/view/game-objects/particle-emitter/explode-test
-- Overall Github Phaser 3 examples - https://github.com/photonstorm/phaser3-examples/blob/master/public
-- Font Awesome ICON in Pause Screen - https://www.emanueleferonato.com/2021/01/01/add-font-awesome-icons-to-your-html5-games-powered-by-phaser-thanks-to-its-dom-support/
-- Upload score screen - https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/text/loginform.html
-
+- Explosion codes - [Link](https://phaser.io/examples/v3/view/game-objects/particle-emitter/explode-test)
+- Overall Github Phaser 3 examples - [Link](https://github.com/photonstorm/phaser3-examples/blob/master/public)
+- Font Awesome ICON in Pause Screen - [Link](https://www.emanueleferonato.com/2021/01/01/add-font-awesome-icons-to-your-html5-games-powered-by-phaser-thanks-to-its-dom-support/)
+- Upload score screen - [Link](https://github.com/photonstorm/phaser3-examples/blob/master/public/assets/text/loginform.html)
+- Phaser 3 rounded rectangle - [Link](https://phaser.io/examples/v3/view/game-objects/graphics/fill-rounded-rectangle)
 
 
 ## Images used
 - Main menu background [image](https://www.freepik.com/vectors/technology) Technology vector created by starline - www.freepik.com
 - Leaderboard background [image](https://www.freepik.com/vectors/background) Background vector created by kjpargeter - www.freepik.com
+- Game background [image](https://dribbble.com/shots/10465923-Stream-of-binary-code-design-vector)
+- Lottie GIF [gif](https://lottiefiles.com/21482-square-grid-background-loop)
