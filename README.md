@@ -24,7 +24,7 @@ This website uses mostly cool colours. On every page in the game, it uses a cool
 - Font Awesome
 
 # Credits
-## Website articles
-- 
-- 
+## Website articles and images
+- Main menu background: [image]https://www.freepik.com/vectors/technology Technology vector created by starline - www.freepik.com
+- Leaderboard background: [image]https://www.freepik.com/vectors/background Background vector created by kjpargeter - www.freepik.com
 - 

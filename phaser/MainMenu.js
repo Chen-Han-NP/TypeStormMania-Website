@@ -6,8 +6,8 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('mainMenuBg', '/assets/nightsky.jpg')
-        this.load.image("bugImg", "/assets/bug.jpg");
+        this.load.image('mainMenuBg', '/assets/25328.jpg')
+        this.load.image("bugImg", "/assets/green_little_bug.png");
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: "/phaser/rexuiplugin.min.js",
@@ -18,11 +18,11 @@ class MainMenu extends Phaser.Scene {
 
     create(){
         let mainBg = this.add.image(375, 540, "mainMenuBg");
-        mainBg.scaleY = 0.57;
-        mainBg.scaleX = 0.76;
+        mainBg.scale = 0.19;
 
         this.text = this.add.text(200,200,"TypeStorm Mania ", {font: "50px Impact"});
-        this.bug = this.add.image(380, 400, "bugImg");
+        this.bug = this.add.image(375, 410, "bugImg");
+        this.bug.scale = 0.65
         
         let selectL = this.add.text(250, 600, '>>', {font:"30px Dosis", fill: 'lightblue' });
         let selectR = this.add.text(470, 600, '<<', {font:"30px Dosis", fill: 'lightblue' });

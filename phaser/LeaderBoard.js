@@ -4,7 +4,7 @@ class LeaderBoard extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('background', '/assets/DarkSpace.jpg');
+        this.load.image('background', '/assets/5518.jpg');
         this.load.image('reload', '/assets/reload-icon-16894.png');
 
     }
@@ -12,7 +12,7 @@ class LeaderBoard extends Phaser.Scene {
     create(){
         var graphics;
         let bg = this.add.image(375,540, "background"); //375, 540 is center of game
-        bg.displayWidth = game.config.width * 1;
+        bg.displayWidth = game.config.width * 1.44;
         bg.scaleY = bg.scaleX;
 
         if (leaderboardData != null){
@@ -64,7 +64,7 @@ class LeaderBoard extends Phaser.Scene {
             
             
             for (var i = 0; i < leaderboardData.length; i++){
-                if (i < 10){
+                if (i < 15){
                     this.stats = this.add.text(100,240 + i * 30,`${i+1}`, {font: "26px Staatliches"});
                     this.stats = this.add.text(220,240 + i * 30,`${leaderboardData[i].name}`, {font: "26px Staatliches"});
                     this.stats = this.add.text(430,240 + i * 30,`${leaderboardData[i].score}`, {font: "26px Staatliches"});
