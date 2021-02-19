@@ -1,5 +1,5 @@
 # ID_TypeStormMania_Website
-Github URL: https://github.com/Chen-Han-NP/ID_TypeStormMania_Website
+Github URL: https://chen-han-np.github.io/ID_TypeStormMania_Website/
 
 # TypeStorm Mania
 This website holds a typing game that challenge users how fast they can type. The words being thrown at users are words from the programming languages python, javascript and c#. The game help users practise their typing speed and train themselves to push their typing speed limit further. There is a leaderboard section that shows the top 20 people who have the 20 highest scores in the database, and challenge others to try to beat their high scores.
