@@ -30,11 +30,10 @@ class TypeGame extends Phaser.Scene {
         graphics.fillStyle(0x7B7B7B, 1);
 
             //  12px radius on the corners
-        graphics.fillRoundedRect(600, 30, 130, 30, 12);
+        graphics.fillRoundedRect(589, 31, 150, 32, 12);
 
-        this.backButton = this.add.text(600, 30, ' << Go back ', {font:"30px Staatliches"});
+        this.backButton = this.add.text(588, 30, ' << GO BACK ', {font:"30px Dosis"});
         this.backButton.setInteractive();
-        this.backButton.setX(game.config.width - this.backButton.width - 25); //Make sure that its alw center
         this.backButton.on('pointerdown', () => { 
             this.scene.start("MainMenu") 
         });
@@ -44,10 +43,10 @@ class TypeGame extends Phaser.Scene {
         pauseGraphics.fillStyle(0x7B7B7B, 1);
 
             //  12px radius on the corners
-        pauseGraphics.fillRoundedRect(42, 32, 110, 30, 12);
+        pauseGraphics.fillRoundedRect(42, 33, 130, 30, 12);
 
         this.isPause = false;
-        this.pauseButton = this.add.text(50, 32, "Pause  | |", {font:"30px Staatliches"});
+        this.pauseButton = this.add.text(50, 32, "PAUSE  | |", {font:"30px Dosis"});
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
@@ -66,7 +65,7 @@ class TypeGame extends Phaser.Scene {
 
         this.currentTextCount = this.textGroup;
 
-        this.maxTextCount = 12;
+        this.maxTextCount = 8;
 
         
 
@@ -88,11 +87,11 @@ class TypeGame extends Phaser.Scene {
         
 
         this.generateText = this.time.addEvent({
-            delay: 600,
+            delay: 1000,
             callbackScope: this,
             callback: function() {
 
-                var languageSelected = this.data["Python"];
+                var languageSelected = this.data["programming"];
         
                 var randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
                 while (this.checkDuplicateWord(randomWord)){
@@ -115,7 +114,7 @@ class TypeGame extends Phaser.Scene {
                             this.bug.scaleX = 0.55;
                             this.bug.scaleY = 0.30;
                             this.physics.world.enable(this.bug);
-                            this.bug.body.setVelocity(0, 38);
+                            this.bug.body.setVelocity(0, 28);
                             this.bug.body.setBounce(1, 1);
 
                             //Set a data with the special bug text for later referances
@@ -124,7 +123,7 @@ class TypeGame extends Phaser.Scene {
 
                             //Add physics to the bug text specifically to be the same as the bug sprite so that they move in the same and constant speed.
                             this.physics.world.enable(this.bugText);
-                            this.bugText.body.setVelocity(0, 38);
+                            this.bugText.body.setVelocity(0, 28);
                             this.bugText.body.setBounce(1, 1);
                             
                             //This boolean makes sure that theres only ONE bug exisiting on the screen in a time
@@ -142,28 +141,28 @@ class TypeGame extends Phaser.Scene {
 
                     //Level controller
                     if (this.NoOfText < 20){
-                        this.applyVelocity(0, 40);
+                        this.applyVelocity(0, 35);
 
                     }
                     else if ((this.NoOfText >= 20) && (this.NoOfText < 60)){
-                        this.applyVelocity(0, 45);
-                        this.maxTextCount = 13;
+                        this.applyVelocity(0, 40);
+                        this.maxTextCount = 9;
                     }
                     else if ((this.NoOfText >= 60) && (this.NoOfText < 100)){
-                        this.applyVelocity(0, 50);
-                        this.maxTextCount = 14;
+                        this.applyVelocity(0, 45);
+                        this.maxTextCount = 10;
                     }
                     else if ((this.NoOfText >= 100) && (this.NoOfText < 140)){
-                        this.applyVelocity(0, 55);
-                        this.maxTextCount = 15;
+                        this.applyVelocity(0, 50);
+                        this.maxTextCount = 11;
                     }
                     else if ((this.NoOfText >= 140) && (this.NoOfText < 180)){
                         this.applyVelocity(0, 60);
-                        this.maxTextCount = 16;
+                        this.maxTextCount = 13;
                     }
                     else if ((this.NoOfText >= 180) && (this.NoOfText < 220)){
                         this.applyVelocity(0, 65);
-                        this.maxTextCount = 17;
+                        this.maxTextCount = 15;
                     }
 
                     else {
