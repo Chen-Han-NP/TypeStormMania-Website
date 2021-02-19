@@ -63,7 +63,8 @@ class TypeGame extends Phaser.Scene {
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
-            game.scene.start("PauseScreen")
+            game.scene.start("UploadScoreScreen");
+            //game.scene.start("PauseScreen")
             
         });
 
@@ -377,10 +378,18 @@ class TypeGame extends Phaser.Scene {
                         }
                     }
                     this.isGenerateBug = true;
-          
+                    this.tweens.add({
+                        targets: this.bug,
+                        y: -100,
+                        duration: 500,
+                        ease: 'Power2',
+                        yoyo: true,
+                        delay: 1000
+                    });
                     this.bug.destroy();
                     this.bugHealthText.destroy();
                     this.bugText.alpha = 1;
+
 
                 }
             }
