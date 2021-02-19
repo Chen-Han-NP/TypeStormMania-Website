@@ -1,11 +1,12 @@
 # ID_TypeStormMania_Website
 Github URL: https://chen-han-np.github.io/ID_TypeStormMania_Website/
+* To run locally, you need to use a live server to host the website for the game to run.
 
 # TypeStorm Mania
 This website holds a typing game that challenge users how fast they can type. The words being thrown at users are words from the programming languages python, javascript and c#. The game help users practise their typing speed and train themselves to push their typing speed limit further. There is a leaderboard section that shows the top 20 people who have the 20 highest scores in the database, and challenge others to try to beat their high scores.
 
 # How to play
-TypeStorm Mania is a typing game. If you press a letter on your keyboard, it finds a word that starts with the same letter that is closes to the ground. When you press the first letter of the word, you have to complete the word before you can move on to the next word. After a certain amount of words typed, an enemy bug will appear at random and block your vision and covers a word. Each enemy bug will have a random health bar and that health bar will decrease by 1 for every word you destroy!
+TypeStorm Mania is a typing game. If you press a letter on your keyboard, it finds a word that starts with the same letter that is closest to the ground. When you press the first letter of the word, the word is locked and you have to completely type out the word before moving on to the next word. At random intervals, an enemy bug will appear and block your vision and covers a word. Each enemy bug will have a random health bar and that health bar will decrease by 1 for every word you destroy! After destroying the bug, the word will be revealed for you to destroy for bonus points!
 
 # Score system
 - Destroy a letter (+1 point)
