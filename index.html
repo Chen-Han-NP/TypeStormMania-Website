@@ -10,7 +10,7 @@
     <script defer src="all.js"></script>
     <script src="phaser/rexuiplugin.min.js"></script>
     
-    <style>
+    <!-- <style>
         .preload-images {
             display: none; 
             width: 0;
@@ -25,10 +25,29 @@
                         url("assets/mainmenuBG.jpg"),
                         url("assets/reload-icon-16894.png")
             }
-    </style>
+    </style> -->
+    <script type="text/javascript">
+            var images = new Array()
+            function preload() {
+                for (i = 0; i < preload.arguments.length; i++) {
+                    images[i] = new Image()
+                    images[i].src = preload.arguments[i]
+                }
+            }
+            preload(
+                "assets/bug_ground_2.png",
+                "assets/code_ground.PNG",
+                "assets/coding_bug_outline.png",
+                'assets/game_background_vertical.jpg',
+                'assets/green_little_bug.png',
+                "assets/html_background2.gif",
+                "assets/leaderboardBG.jpg",
+                "assets/mainmenuBG.jpg",
+                "assets/reload-icon-16894.png"
+            )
+    </script>
 </head>
 <body>
-    <div class="preload-images"></div>
     <div id = "thegame" style="font-family: Dosis;"></div>
     
     <script src="data/programming.js"></script>

@@ -8,8 +8,6 @@ class TypeGame extends Phaser.Scene {
         this.load.image("ground_error", '/assets/bug_ground_2.png');
         this.load.image("sky1", "/assets/game_background_vertical.jpg");
         this.load.image("bug", "/assets/coding_bug_outline.png");
-        this.load.image('spark0', '/assets/particles/blue.png');
-        this.load.image('spark1', '/assets/particles/red.png');
     }
 
     create(){
