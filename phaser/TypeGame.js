@@ -37,17 +37,6 @@ class TypeGame extends Phaser.Scene {
         this.ground.setImmovable(true);
         this.ground.scale = 0.93;
 
-        this.emitter0 = this.add.particles('spark0').createEmitter({
-            x: -200,
-            y: -200,
-            speed: { min: 700, max: 800 },
-            angle: { min: 0, max: 360 },
-            scale: { start: 1.5, end: 0 },
-            blendMode: 'SCREEN',
-            lifespan: 100,
-            gravityY: 1000
-        });
-    
     
         //For rounded rectangles and back button
         graphics = this.add.graphics();
@@ -117,7 +106,7 @@ class TypeGame extends Phaser.Scene {
                 if (this.textGroupObjects.length < this.maxTextCount){
                     if (this.isGenerateBug){
                         if (this.generateBugChance()){
-                      // if (true){
+                      //if (true){
                             console.log("generateBug");
                             var randomX = this.generateRandomX();
 
@@ -242,17 +231,20 @@ class TypeGame extends Phaser.Scene {
                     this.NoOfText += 1;
                     this.textGroup.remove(this.textGroupObjects[this.textPos]);
                     this.textPos = -1;
-                    if (this.bugCurrentHealth > 0){
-                        this.bugCurrentHealth -= 1;
-                        this.tweens.add({
-                            targets: this.bug,
-                            x: this.bug.x + 10,
-                            duration: 100,
-                            ease: 'Power3',
-                            yoyo: true,
-                            delay: 50
-                        });
+                    if (this.bug != null){
+                        if (this.bugCurrentHealth > 0){
+                            this.bugCurrentHealth -= 1;
+                            this.tweens.add({
+                                targets: this.bug,
+                                x: this.bug.x + 10,
+                                duration: 100,
+                                ease: 'Power3',
+                                yoyo: true,
+                                delay: 50
+                            });
+                        }
                     }
+                    
 
 
                 }
@@ -297,7 +289,6 @@ class TypeGame extends Phaser.Scene {
         }
         return false;
     }
-
 
     generateRandomX(){
         return Math.floor(Math.random() * (game.config.width - 130));
@@ -385,14 +376,12 @@ class TypeGame extends Phaser.Scene {
                             this.textGroupObjects[i].setData("hasBug", false);
                         }
                     }
-                    
                     this.isGenerateBug = true;
-                    this.emitter0.setPosition(this.bug.x, this.bug.y);
-                    this.emitter0.explode();
-
+          
                     this.bug.destroy();
                     this.bugHealthText.destroy();
                     this.bugText.alpha = 1;
+
                 }
             }
 
