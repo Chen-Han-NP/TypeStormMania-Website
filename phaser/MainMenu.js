@@ -10,7 +10,7 @@ class MainMenu extends Phaser.Scene {
         this.load.image("bugImg", "./assets/green_little_bug.png");
         this.load.scenePlugin({
             key: 'rexuiplugin',
-            url: "/phaser/rexuiplugin.min.js",
+            url: "phaser/rexuiplugin.min.js",
             sceneKey: 'rexUI'
         });
         
