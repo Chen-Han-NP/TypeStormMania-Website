@@ -53,8 +53,8 @@ class LeaderBoard extends Phaser.Scene {
                 }, 1000);
             })
 
-            this.statsHeader = this.add.text(100, 200,"RANK", {font: "32px Dosis"});
-            this.statsHeader = this.add.text(220, 200,"NAME", {font: "32px Dosis"});
+            this.statsHeader = this.add.text(90, 200,"RANK", {font: "32px Dosis"});
+            this.statsHeader = this.add.text(190, 200,"NAME", {font: "32px Dosis"});
             this.statsHeader = this.add.text(430, 200,"SCORE", {font: "32px Dosis"});
             this.statsHeader = this.add.text(550, 200,"DATE", {font: "32px Dosis"});
 
@@ -65,8 +65,8 @@ class LeaderBoard extends Phaser.Scene {
             
             for (var i = 0; i < leaderboardData.length; i++){
                 if (i < 20){
-                    this.stats = this.add.text(100,240 + i * 30,`${i+1}`, {font: "26px Staatliches"});
-                    this.stats = this.add.text(220,240 + i * 30,`${leaderboardData[i].name}`, {font: "26px Staatliches"});
+                    this.stats = this.add.text(90,240 + i * 30,`${i+1}`, {font: "26px Staatliches"});
+                    this.stats = this.add.text(190,240 + i * 30,`${leaderboardData[i].name}`, {font: "26px Staatliches"});
                     this.stats = this.add.text(430,240 + i * 30,`${leaderboardData[i].score}`, {font: "26px Staatliches"});
                     this.stats = this.add.text(550,240 + i * 30,`${leaderboardData[i].dateOfScore.substring(0, 10)}`, {font: "26px Staatliches"});
                 }
