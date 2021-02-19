@@ -7,6 +7,7 @@ class TypeGame extends Phaser.Scene {
         this.load.image('ground', '/assets/code_ground.png');
         this.load.image("ground_error", '/assets/bug_ground_2.png');
         this.load.image("sky1", "/assets/game_background_vertical.jpg");
+        this.load.image("bug", "/assets/coding_bug_outline.png");
     }
 
     create(){
@@ -14,6 +15,8 @@ class TypeGame extends Phaser.Scene {
         const GHEIGHT = this.scale.height;
         var graphics;
         var pauseGraphics;
+
+        this.bug;
 
         let background = this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
         background.scale = 1.5;
@@ -60,8 +63,9 @@ class TypeGame extends Phaser.Scene {
         this.textGroup = this.physics.add.group();
         this.textGroupObjects = this.textGroup.getChildren();
 
+
         this.currentTextCount = this.textGroup;
-        console.log(this.currentTextCount);
+
         this.maxTextCount = 12;
 
         
@@ -69,7 +73,7 @@ class TypeGame extends Phaser.Scene {
 
         
         this.NoOfText = 0;
-        this.isGenerateBug = false;
+        this.isGenerateBug = true;
 
         
 
@@ -95,8 +99,48 @@ class TypeGame extends Phaser.Scene {
                     randomWord = languageSelected[Math.floor(Math.random() * languageSelected.length)];
                 }
 
+                //Check whether the current total number of texts is smaller than the maxTextCount, so as to add new text inside the list
                 if (this.textGroupObjects.length < this.maxTextCount){
-                    this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
+                    if (this.NoOfText >= 30 && this.isGenerateBug){
+                        if (this.generateBugChance()){
+
+                            var randomX = this.generateRandomX();
+
+                            //Add the bug sprite together with a newly spawned text
+                            
+                            this.bugText = this.add.text(30 + randomX, 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "maroon"});
+                            this.bug = this.add.sprite(30 + randomX + 25, 58, "bug");
+
+                            //Adjust the size of the bug sprite
+                            this.bug.scaleX = 0.55;
+                            this.bug.scaleY = 0.30;
+                            this.physics.world.enable(this.bug);
+                            this.bug.body.setVelocity(0, 38);
+                            this.bug.body.setBounce(1, 1);
+
+                            //Set a data with the special bug text for later referances
+                            this.bugText.setData("hasBug", true);
+                            this.textGroup.add(this.bugText);
+
+                            //Add physics to the bug text specifically to be the same as the bug sprite so that they move in the same and constant speed.
+                            this.physics.world.enable(this.bugText);
+                            this.bugText.body.setVelocity(0, 38);
+                            this.bugText.body.setBounce(1, 1);
+                            
+                            //This boolean makes sure that theres only ONE bug exisiting on the screen in a time
+                            this.isGenerateBug = false;
+
+                        }
+                        else{
+                            this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
+                        }
+                    }
+                    else{
+                        this.textGroup.add(this.add.text(this.generateRandomX(), 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "black"}));
+                    }
+                    
+
+                    //Level controller
                     if (this.NoOfText < 20){
                         this.applyVelocity(0, 40);
 
@@ -139,16 +183,29 @@ class TypeGame extends Phaser.Scene {
 
         this.input.keyboard.on('keydown', function (event) { 
             //Check if its first letter entered
+            
             if (this.textPos == -1){
+                
                 for (var i = 0; i < this.textGroupObjects.length; i++){
+                    
                     if (event.key == this.textGroupObjects[i].text[0]){
-                        var newText = this.textGroupObjects[i].text.substring(1);
-                        this.textGroupObjects[i].setText(newText);
-                        this.textPos = i;
-                        this.textGroupObjects[i].setColor('#ebb134');
-                        this.updateScore(1);
-                        
-                        break;
+                        var okayToLock = true;
+                        if (this.textGroupObjects[i].getData("hasBug") == true){
+                            console.log("yes this color")
+                            if (this.isGenerateBug == false){
+                                console.log("dont lock");
+                                okayToLock = false;
+                            }
+                        }
+                        if (okayToLock){
+                            var newText = this.textGroupObjects[i].text.substring(1);
+                            this.textGroupObjects[i].setText(newText);
+                            this.textPos = i;
+                            this.textGroupObjects[i].setColor('#ebb134');
+                            this.updateScore(1);
+                            break;
+                        }
+
                     }
                 }
             }
@@ -181,14 +238,14 @@ class TypeGame extends Phaser.Scene {
         this.scoreText.text = "Score: " + this.score;
     }
 
-    generateNewText(x, y, name){
 
-        let newText = this.add.text(x, y, name, {font: "18px Arial Black", fill: 'white'});
-        this.physics.world.enable(newText);
-        newText.body.setVelocity(100, 200);
-        newText.body.setBounce(1, 1);
-        newText.body.setCollideWorldBounds(true);
-        return newText;
+    generateBugChance(){
+        var value1 = Math.floor(Math.random() * 10);
+        var value2 = Math.floor(Math.random() * 10);
+        if (value1 == value2){
+            return true;
+        }
+        return false;
     }
 
 
@@ -214,11 +271,15 @@ class TypeGame extends Phaser.Scene {
     //For velocity, the bigger the x value the faster the speed travelled horizontally, and same for y.
     applyVelocity(x, y){
         for (var i = 0; i < this.textGroupObjects.length; i++){
-            this.physics.world.enable(this.textGroupObjects[i]);
-            var randomY = Math.floor(Math.random() * 8);
-            this.textGroupObjects[i].body.setVelocity(x, y - 4 + randomY);
-            this.textGroupObjects[i].body.setBounce(1, 1);
+            if (this.textGroupObjects[i].getData("hasBug") == null){
+                this.physics.world.enable(this.textGroupObjects[i]);
+                var randomY = Math.floor(Math.random() * 8);
+                this.textGroupObjects[i].body.setVelocity(x, y - 4 + randomY);
+                this.textGroupObjects[i].body.setBounce(1, 1);
+            }
         }
+
+
     }
 
 
@@ -233,12 +294,7 @@ class TypeGame extends Phaser.Scene {
         return false;
     }
 
-    getAllFirstLetter(){
-        var letterList = [];
-        for (var i = 0; i < this.textGroupObjects.length; i++){
-            console.log(this.textGroupObjects[i].text[0]);
-        }
-    }
+
 
     update(){
         //Check if any text has collided with the ground
@@ -271,6 +327,21 @@ class TypeGame extends Phaser.Scene {
         else{
             this.gameOver = false;
             this.textGroupObjects = this.textGroup.getChildren();
+
+            if (this.bug != null){
+                if (this.bug.getBounds().top > 500){
+                    for (var i = 0; i < this.textGroupObjects.length; i++){
+                        if (this.textGroupObjects[i].getData("hasBug") == true){
+                            this.textGroupObjects[i].setData("hasBug", false);
+                        }
+
+                    }
+                    this.bug.destroy();
+                    this.isGenerateBug = true;
+                }
+            }
+
+
             if (this.NoOfText == 200){
                 this.generateText.delay = 580;
             }
