@@ -8,23 +8,28 @@ class TypeGame extends Phaser.Scene {
         this.load.image("ground_error", '/assets/bug_ground_2.png');
         this.load.image("sky1", "/assets/game_background_vertical.jpg");
         this.load.image("bug", "/assets/coding_bug_outline.png");
+        this.load.image('spark0', '/assets/particles/blue.png');
+        this.load.image('spark1', '/assets/particles/red.png');
     }
 
     create(){
+        //Define the constant screen width and height
         const GWIDTH = this.scale.width;
         const GHEIGHT = this.scale.height;
+
+        //For the rounded rectangle behind the two buttons.
         var graphics;
         var pauseGraphics;
 
+        //Initialize the bug and its health text
         this.bug;
-
         this.bugHealth;
         this.bugCurrentHealth;
         this.initializeNewBugHealth();
 
         this.bugHealthText = this.add.text(0, - 100, this.bugCurrentHealth + " / " + this.bugHealth, {font: "20px Dosis", fill: "yellow", backgroundColor: "grey" })
 
-
+        //Initialize the background, ground and the emitter
         let background = this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
         background.scale = 1.5;
 
@@ -32,11 +37,23 @@ class TypeGame extends Phaser.Scene {
         this.ground.setImmovable(true);
         this.ground.scale = 0.93;
 
+        this.emitter0 = this.add.particles('spark0').createEmitter({
+            x: -200,
+            y: -200,
+            speed: { min: 700, max: 800 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 1.5, end: 0 },
+            blendMode: 'SCREEN',
+            lifespan: 100,
+            gravityY: 1000
+        });
+    
+    
+        //For rounded rectangles and back button
         graphics = this.add.graphics();
-
         graphics.fillStyle(0x7B7B7B, 1);
 
-            //  12px radius on the corners
+        //12px radius on the corners
         graphics.fillRoundedRect(589, 31, 150, 32, 12);
 
         this.backButton = this.add.text(588, 30, ' << GO BACK ', {font:"30px Dosis"});
@@ -45,11 +62,11 @@ class TypeGame extends Phaser.Scene {
             this.scene.start("MainMenu") 
         });
 
+        //For the Pause button
         pauseGraphics = this.add.graphics();
-
         pauseGraphics.fillStyle(0x7B7B7B, 1);
 
-            //  12px radius on the corners
+        //12px radius on the corners
         pauseGraphics.fillRoundedRect(42, 33, 130, 30, 12);
 
         this.isPause = false;
@@ -57,28 +74,23 @@ class TypeGame extends Phaser.Scene {
         this.pauseButton.setInteractive();
         this.pauseButton.on('pointerdown', () => {
             game.scene.pause("TypeGame");
-            //game.scene.start("GameOverScreen")
             game.scene.start("PauseScreen")
             
         });
 
         this.gameOver = false;
         this.data = programmingData;
-        
 
+        //A text group to store all the current text objects appeared on the screen.
         this.textGroup = this.physics.add.group();
         this.textGroupObjects = this.textGroup.getChildren();
 
-
-        this.currentTextCount = this.textGroup;
-
+        //Keeps track of the max count of texts allowed to have on the screen
         this.maxTextCount = 8;
-
-        
+        //Keeps track of the number of text the player has destroyed
         this.NoOfText = 0;
+        //Keeps track of current Bug condition (make sure that only one Bug exists at a time)
         this.isGenerateBug = true;
-
-        
 
         this.score = 0;
         //Get the top score stored in the local storage, if first time player, set it to 0 first.
@@ -88,8 +100,7 @@ class TypeGame extends Phaser.Scene {
 
         this.updateScore(this.score);
 
-        
-
+        //A method that runs every 1.2 sec to generate a new text if necessary
         this.generateText = this.time.addEvent({
             delay: 1200,
             callbackScope: this,
@@ -106,7 +117,7 @@ class TypeGame extends Phaser.Scene {
                 if (this.textGroupObjects.length < this.maxTextCount){
                     if (this.isGenerateBug){
                         if (this.generateBugChance()){
-                       // if (true){
+                      // if (true){
                             console.log("generateBug");
                             var randomX = this.generateRandomX();
 
@@ -233,6 +244,14 @@ class TypeGame extends Phaser.Scene {
                     this.textPos = -1;
                     if (this.bugCurrentHealth > 0){
                         this.bugCurrentHealth -= 1;
+                        this.tweens.add({
+                            targets: this.bug,
+                            x: this.bug.x + 10,
+                            duration: 100,
+                            ease: 'Power3',
+                            yoyo: true,
+                            delay: 50
+                        });
                     }
 
 
@@ -306,7 +325,9 @@ class TypeGame extends Phaser.Scene {
 
     checkGameOver(){
         if (this.bug != null){
-            if (this.bug.getBounds().bottom >= this.ground.getBounds().top){
+            if (this.bug.getBounds().bottom - 10 >= this.ground.getBounds().top){
+                this.ground_error = this.add.image(game.config.width/2, game.config.height - 30, 'ground_error');
+                this.ground_error.scale = 0.95;
                 return true;
             }
         }
@@ -366,6 +387,9 @@ class TypeGame extends Phaser.Scene {
                     }
                     
                     this.isGenerateBug = true;
+                    this.emitter0.setPosition(this.bug.x, this.bug.y);
+                    this.emitter0.explode();
+
                     this.bug.destroy();
                     this.bugHealthText.destroy();
                     this.bugText.alpha = 1;

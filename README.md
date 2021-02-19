@@ -39,3 +39,5 @@ This website uses mostly cool colours. On every page in the game, it uses a cool
 ## Images used
 - Main menu background [image](https://www.freepik.com/vectors/technology) Technology vector created by starline - www.freepik.com
 - Leaderboard background [image](https://www.freepik.com/vectors/background) Background vector created by kjpargeter - www.freepik.com
+- Explosion codes - https://phaser.io/examples/v3/view/game-objects/particle-emitter/explode-test
+- Overall Github Phaser 3 examples - https://github.com/photonstorm/phaser3-examples/blob/master/public

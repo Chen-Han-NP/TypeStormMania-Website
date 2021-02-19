@@ -6,7 +6,7 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('mainMenuBg', '/assets/25328.jpg')
+        this.load.image('mainMenuBg', '/assets/mainmenuBG.jpg')
         this.load.image("bugImg", "/assets/green_little_bug.png");
         this.load.scenePlugin({
             key: 'rexuiplugin',
