@@ -18,6 +18,13 @@ class TypeGame extends Phaser.Scene {
 
         this.bug;
 
+        this.bugHealth;
+        this.bugCurrentHealth;
+        this.initializeNewBugHealth();
+
+        this.bugHealthText = this.add.text(0, - 100, this.bugCurrentHealth + " / " + this.bugHealth, {font: "20px Dosis", fill: "yellow", backgroundColor: "grey" })
+
+
         let background = this.add.image(GWIDTH * 0.5, GHEIGHT * 0.5, "sky1");
         background.scale = 1.5;
 
@@ -68,9 +75,6 @@ class TypeGame extends Phaser.Scene {
         this.maxTextCount = 8;
 
         
-
-
-        
         this.NoOfText = 0;
         this.isGenerateBug = true;
 
@@ -87,7 +91,7 @@ class TypeGame extends Phaser.Scene {
         
 
         this.generateText = this.time.addEvent({
-            delay: 1000,
+            delay: 1200,
             callbackScope: this,
             callback: function() {
 
@@ -100,22 +104,27 @@ class TypeGame extends Phaser.Scene {
 
                 //Check whether the current total number of texts is smaller than the maxTextCount, so as to add new text inside the list
                 if (this.textGroupObjects.length < this.maxTextCount){
-                    if (this.NoOfText >= 30 && this.isGenerateBug){
+                    if (this.isGenerateBug){
                         if (this.generateBugChance()){
-
+                       // if (true){
+                            console.log("generateBug");
                             var randomX = this.generateRandomX();
 
                             //Add the bug sprite together with a newly spawned text
-                            
-                            this.bugText = this.add.text(30 + randomX, 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "maroon"});
                             this.bug = this.add.sprite(30 + randomX + 25, 58, "bug");
-
+                            this.bugText = this.add.text(30 + randomX, 50, randomWord,  {font: "20px Arial Black", fill: 'white', backgroundColor: "maroon"});
+                            this.bugText.alpha = 0;
+                            
+                            this.initializeNewBugHealth();
+                            this.bugHealthText = this.add.text(0, - 100, this.bugCurrentHealth + " / " + this.bugHealth, {font: "20px Dosis", fill: "yellow", backgroundColor: "grey" })
                             //Adjust the size of the bug sprite
                             this.bug.scaleX = 0.55;
                             this.bug.scaleY = 0.30;
                             this.physics.world.enable(this.bug);
                             this.bug.body.setVelocity(0, 28);
                             this.bug.body.setBounce(1, 1);
+
+
 
                             //Set a data with the special bug text for later referances
                             this.bugText.setData("hasBug", true);
@@ -128,6 +137,7 @@ class TypeGame extends Phaser.Scene {
                             
                             //This boolean makes sure that theres only ONE bug exisiting on the screen in a time
                             this.isGenerateBug = false;
+                            console.log(this.isGenerateBug);
 
                         }
                         else{
@@ -192,7 +202,6 @@ class TypeGame extends Phaser.Scene {
                         if (this.textGroupObjects[i].getData("hasBug") == true){
                             console.log("yes this color")
                             if (this.isGenerateBug == false){
-                                console.log("dont lock");
                                 okayToLock = false;
                             }
                         }
@@ -212,11 +221,21 @@ class TypeGame extends Phaser.Scene {
             //Check if a word is locked. 
             else {
                 if (event.key == this.textGroupObjects[this.textPos].text){
+                    if (this.textGroupObjects[this.textPos].getData("hasBug") != null){
+                        this.updateScore(15);
+                    }
+                    else{
+                        this.updateScore(5);
+                    }
                     this.textGroupObjects[this.textPos].setText("");
-                    this.updateScore(5);
                     this.NoOfText += 1;
                     this.textGroup.remove(this.textGroupObjects[this.textPos]);
                     this.textPos = -1;
+                    if (this.bugCurrentHealth > 0){
+                        this.bugCurrentHealth -= 1;
+                    }
+
+
                 }
 
                 else if (event.key == this.textGroupObjects[this.textPos].text[0]){
@@ -237,7 +256,10 @@ class TypeGame extends Phaser.Scene {
         this.scoreText.text = "Score: " + this.score;
     }
 
-
+    initializeNewBugHealth(){
+        this.bugHealth = 5 + Math.floor(Math.random() * 4);
+        this.bugCurrentHealth = this.bugHealth;
+    }
     generateBugChance(){
         var value1 = Math.floor(Math.random() * 10);
         var value2 = Math.floor(Math.random() * 10);
@@ -283,6 +305,12 @@ class TypeGame extends Phaser.Scene {
 
 
     checkGameOver(){
+        if (this.bug != null){
+            if (this.bug.getBounds().bottom >= this.ground.getBounds().top){
+                return true;
+            }
+        }
+
         for (var i = 0; i < this.textGroupObjects.length; i++){
             if (this.textGroupObjects[i].y + 20 >= this.ground.getBounds().top){
                 this.ground_error = this.add.image(game.config.width/2, game.config.height - 30, 'ground_error');
@@ -328,24 +356,30 @@ class TypeGame extends Phaser.Scene {
             this.textGroupObjects = this.textGroup.getChildren();
 
             if (this.bug != null){
-                if (this.bug.getBounds().top > 500){
+                this.bugHealthText.setText(this.bugCurrentHealth + " / " + this.bugHealth);
+                this.bugHealthText.setPosition(this.bug.x - 15, this.bug.y - 10);
+                if (this.bugHealth > 0 && this.bugCurrentHealth == 0){
                     for (var i = 0; i < this.textGroupObjects.length; i++){
                         if (this.textGroupObjects[i].getData("hasBug") == true){
                             this.textGroupObjects[i].setData("hasBug", false);
                         }
-
                     }
-                    this.bug.destroy();
+                    
                     this.isGenerateBug = true;
+                    this.bug.destroy();
+                    this.bugHealthText.destroy();
+                    this.bugText.alpha = 1;
                 }
             }
 
-
+            if (this.NoOfText == 100){
+                this.generateText.delay = 1000;
+            }
             if (this.NoOfText == 200){
-                this.generateText.delay = 580;
+                this.generateText.delay = 800;
             }
             if (this.NoOfText == 400){
-                this.generateText.delay = 550;
+                this.generateText.delay = 700;
             }
             
         }
@@ -384,6 +418,7 @@ class PauseScreen extends Phaser.Scene {
         this.restartButton.setInteractive();
         this.restartButton.on('pointerdown', () => { 
             game.scene.stop("PauseScreen");
+            game.scene.stop("TypeGame");
             game.scene.start("TypeGame");
         });
 
