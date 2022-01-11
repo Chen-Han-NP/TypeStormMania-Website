@@ -1,5 +1,5 @@
 # ID_TypeStormMania_Website
-Github URL: https://chen-han-np.github.io/ID_TypeStormMania_Website/
+Github URL: https://chen-han-np.github.io/TypeStormMania_Website/
 * To run locally, you need to use a live server to host the website for the game to run.
 
 # TypeStorm Mania
