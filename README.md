@@ -1,5 +1,5 @@
 ## ID Assignment 3 - TypeStormMania_Website
-## Github Page Link: https://chen-han-np.github.io/TypeStormMania-Website/
+## Github Page Link: https://chen-han-tx.github.io/TypeStormMania-Website/
 
 <img width="1440" alt="Screenshot 2022-12-15 at 11 39 33 AM" src="https://user-images.githubusercontent.com/73086331/207767032-9a080636-e5f5-4c01-8316-142661b99ac4.png">
 
